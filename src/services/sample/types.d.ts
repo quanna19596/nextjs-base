@@ -6,15 +6,21 @@ export type TCommonBody = {};
 
 export type TCommonResponseSuccess = {};
 
-export type TCommonResponseError = {};
+export type TCommonResponseFailed = {};
 
-export type TPaths<T = {}> = TCommonPaths & T;
-export type TQueries<T = {}> = TCommonQueries & T;
-export type TBody<T = {}> = TCommonBody & T;
+export type TRequestPaths<T = {}> = TCommonPaths & T;
+
+export type TRequestQueries<T = {}> = TCommonQueries & T;
+
+export type TRequestBody<T = {}> = TCommonBody & T;
+
 export type TResponseSuccess<T = {}> = TCommonResponseSuccess & T;
-export type TResponseFailed<T = {}> = TCommonResponseError & T;
-export type TRequest<TP = {}, TQ = {}, TB = {}> = {
-  paths?: TP;
-  queries?: TQ;
-  body?: TB;
+
+export type TResponseFailed<T = {}> = TCommonResponseFailed & T;
+
+export type TRequest<TPaths = {}, TQueries = {}, TBody = {}> = {
+  paths?: TPaths;
+  queries?: TQueries;
+  body?: TBody;
 };
+

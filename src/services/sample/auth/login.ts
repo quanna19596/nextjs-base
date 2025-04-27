@@ -1,32 +1,31 @@
 import SampleService from "@/services/sample";
 import {
-  TPaths,
-  TQueries,
-  TBody,
+  TRequestPaths,
+  TRequestQueries,
+  TRequestBody,
   TResponseSuccess,
   TResponseFailed,
   TRequest,
 } from "@/services/sample/types";
 
-export type TLoginPaths = TPaths<{}>;
+export type TLoginPaths = TRequestPaths<{}>;
 
-export type TLoginQueries = TQueries<{}>;
+export type TLoginQueries = TRequestQueries<{}>;
 
-export type TLoginBody = TBody<{}>;
+export type TLoginBody = TRequestBody<{}>;
 
 export type TLoginResponseSuccess = TResponseSuccess<{}>;
 
 export type TLoginResponseFailed = TResponseFailed<{}>;
 
 export type TLoginRequest = TRequest<TLoginPaths, TLoginQueries, TLoginBody>;
-// export type TLoginResponse = TResponse<TLoginPaths, TLoginQueries, TLoginBody>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const login = async (request: TLoginRequest): Promise<any> => {
+const login = async (
+  request: TLoginRequest
+): Promise<TLoginResponseSuccess> => {
+  const { body } = request;
   const service = await SampleService();
-  const response = await service.get(`/content/${slug}`, {
-    params: params?.queries,
-  });
+  const response = await service.get(`/login`, body);
   return response.data;
 };
 
