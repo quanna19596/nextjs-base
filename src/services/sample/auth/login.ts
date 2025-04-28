@@ -12,9 +12,22 @@ export type TLoginPaths = TRequestPaths<{}>;
 
 export type TLoginQueries = TRequestQueries<{}>;
 
-export type TLoginBody = TRequestBody<{}>;
+export type TLoginBody = TRequestBody<{
+  username: string;
+  password: string;
+}>;
 
-export type TLoginResponseSuccess = TResponseSuccess<{}>;
+export type TLoginResponseSuccess = TResponseSuccess<{
+  id: string;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  image: string;
+  accessToken: string;
+  refreshToken: string;
+}>;
 
 export type TLoginResponseFailed = TResponseFailed<{}>;
 
@@ -25,7 +38,7 @@ const login = async (
 ): Promise<TLoginResponseSuccess> => {
   const { body } = request;
   const service = await SampleService();
-  const response = await service.get(`/login`, body);
+  const response = await service.post(`/auth/login`, body);
   return response.data;
 };
 
