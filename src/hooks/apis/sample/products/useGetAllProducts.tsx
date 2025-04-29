@@ -13,9 +13,7 @@ const useGetAllProducts = () => {
   >({
     mutationFn: getAllProducts,
     onSuccess: () => {},
-    onError: (error) => {
-      console.log(error);
-    },
+    onError: () => {},
   });
 };
 
