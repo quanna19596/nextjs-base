@@ -1,0 +1,48 @@
+@import "./fonts.css";
+
+@import "tailwindcss";
+
+@theme {
+  /* --color-*	Color utilities */
+
+  /* --font-*	Font family utilities */
+  --font-svn-gilroy: "SVN-Gilroy", "sans-serif";
+
+  /* --text-*	Font size utilities */
+
+  /* --font-weight-*	Font weight utilities */
+
+  /* --tracking-*	Letter spacing utilities */
+
+  /* --leading-*	Line height utilities */
+
+  /* --breakpoint-*	Responsive breakpoint variants */
+
+  /* --container-*	Container query variants */
+
+  /* --spacing-*	Spacing and sizing utilities */
+
+  /* --radius-*	Border radius utilities */
+
+  /* --shadow-*	Box shadow utilities */
+
+  /* --inset-shadow-*	Inset box shadow utilities */
+
+  /* --drop-shadow-*	Drop shadow filter utilities */
+
+  /* --blur-*	Blur filter utilities */
+
+  /* --perspective-*	Perspective utilities */
+
+  /* --aspect-*	Aspect ratio utilities */
+
+  /* --ease-*	Transition timing function utilities */
+
+  /* --animate-*	Animation utilities */
+}
+
+@layer base {
+  * {
+    @apply font-svn-gilroy font-medium;
+  }
+}

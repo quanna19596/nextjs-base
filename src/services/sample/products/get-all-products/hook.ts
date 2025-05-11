@@ -1,9 +1,11 @@
-import getAllProducts, {
+import { useMutation } from "@tanstack/react-query";
+
+import {
   TGetAllProductsRequest,
   TGetAllProductsResponseFailed,
   TGetAllProductsResponseSuccess,
-} from "@/services/sample/products/get-all-products";
-import { useMutation } from "@tanstack/react-query";
+} from "./types";
+import getAllProducts from "./api";
 
 const useGetAllProducts = () => {
   return useMutation<

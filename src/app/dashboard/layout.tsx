@@ -1,19 +1,21 @@
-// import getAllProducts from "@/services/sample/products/get-all-products";
-// import { getServerSession } from "next-auth";
-// import { authOptions } from "../api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
 
-export default async function DashboardLayout({
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
+const DashboardLayout = async ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
-  // const session = await getServerSession(authOptions);
-  // console.log('SERVER', session);
-  // const resp = await getAllProducts({});
+}>) => {
+  const session = await getServerSession(authOptions);
+  console.log(session);
+  
   return (
     <div>
       <p>DashboardLayout</p>
       <div>{children}</div>
     </div>
   );
-}
+};
+
+export default DashboardLayout;
