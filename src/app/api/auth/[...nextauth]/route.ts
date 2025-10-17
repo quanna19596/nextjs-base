@@ -47,7 +47,6 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, user }: { token: JWT; user: User }) {
       if (user) {
@@ -81,6 +80,19 @@ export const authOptions: NextAuthOptions = {
         accessToken: token?.accessToken || "",
         refreshToken: token?.refreshToken || "",
       };
+    },
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+  cookies: {
+    sessionToken: {
+      name: process.env.SESSION_TOKEN_NAME || "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        domain: process.env.DOMAIN,
+      },
     },
   },
 };

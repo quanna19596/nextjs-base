@@ -9,7 +9,7 @@ const DashboardLayout = async ({
 }>) => {
   const session = await getServerSession(authOptions);
   console.log(session);
-  
+
   return (
     <div>
       <p>DashboardLayout</p>
