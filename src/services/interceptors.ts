@@ -22,21 +22,13 @@ const Interceptors = ({
 }): AxiosInstance => {
   const instance = axios.create({
     baseURL,
+    headers: commonHeaders,
+    params: commonParams,
   });
 
   const requestHandler = async (
     request: InternalAxiosRequestConfig
   ): Promise<InternalAxiosRequestConfig> => {
-    if (commonHeaders) {
-      Object.entries(commonHeaders).forEach(([key, value]) => {
-        if (value !== undefined) {
-          request.headers.set(key, String(value));
-        }
-      });
-    }
-
-    request.params = { ...request.params, ...commonParams };
-
     onRequest?.(request);
     return request;
   };

@@ -14,13 +14,11 @@ export type TRefreshTokenQueries = TRequestQueries<{}>;
 
 export type TRefreshTokenBody = TRequestBody<{
   refreshToken: string;
-  password: string;
 }>;
 
 export type TRefreshTokenResponseSuccess = TResponseSuccess<{
   accessToken: string;
   refreshToken: string;
-  expiresIn: number;
 }>;
 
 export type TRefreshTokenResponseFailed = TResponseFailed<{}>;

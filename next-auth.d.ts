@@ -1,10 +1,10 @@
-import { TLoginResponseSuccess } from "@/services/sample/auth/login";
+import { TCookieStructure } from "@/common/types";
 
 declare module "next-auth" {
-  interface Session extends TLoginResponseSuccess {}
-  interface User extends TLoginResponseSuccess {}
+  interface Session extends TCookieStructure {}
+  interface User extends TCookieStructure {}
 }
 
 declare module "next-auth/jwt" {
-  interface JWT extends TLoginResponseSuccess {}
+  interface JWT extends TCookieStructure {}
 }

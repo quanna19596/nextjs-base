@@ -10,7 +10,10 @@ import { TProduct } from "@/services/sample/products/types";
 
 export type TGetAllProductsPaths = TRequestPaths<{}>;
 
-export type TGetAllProductsQueries = TRequestQueries<{}>;
+export type TGetAllProductsQueries = TRequestQueries<{
+  pageNum?: number;
+  pageSize?: number;
+}>;
 
 export type TGetAllProductsBody = TRequestBody<{}>;
 

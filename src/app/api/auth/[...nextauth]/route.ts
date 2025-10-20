@@ -2,7 +2,7 @@ import login, {
   TLoginResponseFailed,
   TLoginResponseSuccess,
 } from "@/services/sample/auth/login";
-import serverApiCall from "@/services/server-api-call";
+import http from "@/services/http";
 import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -26,7 +26,7 @@ export const authOptions: NextAuthOptions = {
           },
         };
 
-        const { data, error } = await serverApiCall<
+        const { data, error } = await http.request<
           TLoginResponseSuccess,
           TLoginResponseFailed
         >(login(loginRequest));
