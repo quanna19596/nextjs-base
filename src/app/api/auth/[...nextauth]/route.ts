@@ -83,9 +83,15 @@ export const authOptions: NextAuthOptions = {
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+  },
+  pages: {
+    signIn: "/vi/login",
+  },
   cookies: {
     sessionToken: {
-      name: process.env.SESSION_TOKEN_NAME || "next-auth.session-token",
+      name: "next-auth.session-token",
       options: {
         httpOnly: true,
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",

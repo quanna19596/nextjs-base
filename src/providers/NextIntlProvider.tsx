@@ -7,7 +7,6 @@ const NextIntlProvider = async ({
   children: React.ReactNode;
 }) => {
   const messages = await getMessages();
-  console.log(messages);
 
   return (
     <NextIntlClientProvider messages={messages}>

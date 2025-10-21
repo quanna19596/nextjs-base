@@ -1,3 +1,5 @@
+import { FormEvent } from "react";
+
 export type TCookieStructure = {
   id: string;
   username: string;
@@ -9,3 +11,6 @@ export type TCookieStructure = {
   accessToken: string;
   refreshToken: string;
 };
+
+export type TOnSubmitFormEvent = FormEvent<HTMLFormElement>;
+export type TOnChangeInputEvent = ChangeEvent<HTMLInputElement>;

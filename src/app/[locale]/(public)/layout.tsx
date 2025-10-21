@@ -17,6 +17,7 @@ const RootLayout = ({
   return (
     <html lang="en">
       <body>
+        <span>PublicLayout</span>
         <Providers>{children}</Providers>
       </body>
     </html>
