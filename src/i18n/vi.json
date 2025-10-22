@@ -1,8 +1,14 @@
 {
   "App": {
-    "Layout": {},
-    "Page": {
-      "title": "Xin chào"
+    "Private": {
+      "Dashboard": {
+        "Layout": "Xin Chào Dashboard Layout",
+        "Page": "Xin Chào Dashboard Page"
+      }
+    },
+    "Public": {
+      "Layout": "Xin Chào Public Layout",
+      "Page": "Xin Chào Public Page"
     }
   }
 }

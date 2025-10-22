@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Providers from "@/providers";
 
 import "@/styles/globals.css";
+import { useTranslations } from "next-intl";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,10 +15,12 @@ const DashboardLayout = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
+  const t = useTranslations();
+
   return (
     <html lang="en">
       <body>
-        <span>DashboardLayout</span>
+        <span>{t("App.Private.Dashboard.Layout")}</span>
         <Providers>{children}</Providers>
       </body>
     </html>

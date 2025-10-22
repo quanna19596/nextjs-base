@@ -2,11 +2,13 @@
   "name": "nextjs-base",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "yarn generate-private-routes && next dev -p 3001",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-private-routes": "node generator/routes/scripts.js"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.74.4",

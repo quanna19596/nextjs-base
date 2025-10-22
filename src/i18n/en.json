@@ -1,8 +1,14 @@
 {
   "App": {
-    "Layout": {},
-    "Page": {
-      "title": "Hello"
+    "Private": {
+      "Dashboard": {
+        "Layout": "Hello Dashboard Layout",
+        "Page": "Hello Dashboard Page"
+      }
+    },
+    "Public": {
+      "Layout": "Hello Public Layout",
+      "Page": "Hello Public Page"
     }
   }
 }

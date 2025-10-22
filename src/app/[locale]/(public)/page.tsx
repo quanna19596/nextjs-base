@@ -15,7 +15,7 @@ const Home = () => {
 
   return (
     <div>
-      <span>{t("App.Page.title")}</span>
+      <span>{t("App.Public.Page")}</span>
       <button onClick={handleClick}>Get All Products</button>
     </div>
   );
