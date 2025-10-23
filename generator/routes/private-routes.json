@@ -1,5 +1,10 @@
 [
-  "/dashboard/page.tsx",
-  "/private-in-pub-1/page.tsx",
-  "/login/private-in-pub-2/page.tsx"
+  "/vi/dashboard",
+  "/en/dashboard",
+  "/vi/private-in-pub-1/[A-Za-z0-9]+",
+  "/en/private-in-pub-1/[A-Za-z0-9]+",
+  "/vi/private-in-pub-1",
+  "/en/private-in-pub-1",
+  "/vi/login/private-in-pub-2",
+  "/en/login/private-in-pub-2"
 ]

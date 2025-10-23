@@ -2,38 +2,52 @@ import fs from "fs";
 import path from "path";
 
 const generatePrivateRoutes = () => {
+  const packageJson = JSON.parse(
+    fs.readFileSync(path.join(process.cwd(), "package.json"), "utf8")
+  );
+
+  const { locales } = packageJson.internationalization;
+
   const baseDir = path.join(process.cwd(), "src/app");
   const targetDir = path.join(
     process.cwd(),
     "generator/routes/private-routes.json"
   );
 
-  const pageFullPaths = [];
+  let pagePaths = [];
 
   const walk = (dir) => {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      const fullPath = path.join(dir, entry.name);
+      const rawPath = path.join(dir, entry.name);
 
       if (entry.isDirectory()) {
-        walk(fullPath);
+        walk(rawPath);
       } else if (entry.isFile() && entry.name === "page.tsx") {
-        pageFullPaths.push(fullPath);
+        console.log(rawPath);
+        const pathWithoutBaseDir = rawPath
+          .replace(baseDir, "")
+          .replace("/[locale]", "");
+        const localePaths = locales.map(
+          (locale) => `/${locale}${pathWithoutBaseDir}`
+        );
+        pagePaths = [...pagePaths, ...localePaths];
       }
     }
   };
 
   walk(baseDir);
 
-  const privatePageFullPaths = pageFullPaths.filter((path) =>
+  const privatePagePaths = pagePaths.filter((path) =>
     path.includes("(private)")
   );
 
-  const beautifiedPrivatePagePaths = privatePageFullPaths.map((path) => {
-    const pathWithoutBaseDir = path.replace(baseDir, "");
-    const pathComponents = pathWithoutBaseDir.split("/");
-    const validPath = pathComponents
-      .filter((seg) => /^[a-zA-Z0-9]/.test(seg) || !seg)
+  const beautifiedPrivatePagePaths = privatePagePaths.map((path) => {
+    const pathSegments = path.replace(/\/page\.tsx$/, "").split("/");
+    const validPath = pathSegments
+      .filter((seg) => /^[A-Za-z0-9\[]/.test(seg) || !seg)
+      .map((seg) => (/^\[.*\]$/.test(seg) ? "[A-Za-z0-9]+" : seg))
       .join("/");
+
     return validPath;
   });
 

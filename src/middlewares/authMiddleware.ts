@@ -1,14 +1,17 @@
 import withAuth from "next-auth/middleware";
 import { NextMiddleware } from "next/server";
-import rawPrivateRoutes from "@/../generator/routes/private-routes.json";
-import { routing } from "@/i18n/routing";
+import privateRoutes from "@/../generator/routes/private-routes.json";
 
 const authMiddleware = withAuth({
   callbacks: {
     authorized: async ({ token, req }) => {
+      const { pathname } = req.nextUrl;
       const isLoggedIn = !!token;
-      console.log(routing.locales, rawPrivateRoutes);
-      return isLoggedIn || req.nextUrl.pathname !== "/vi/dashboard";
+      const isPrivate = privateRoutes.some((rgRoute) =>
+        (rgRoute as unknown as RegExp).test(pathname)
+      );
+
+      return isLoggedIn || !isPrivate;
     },
   },
   pages: {

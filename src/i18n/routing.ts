@@ -1,10 +1,12 @@
-import { createNavigation } from 'next-intl/navigation';
-import { defineRouting } from 'next-intl/routing';
+import { createNavigation } from "next-intl/navigation";
+import { defineRouting } from "next-intl/routing";
+
+import packageJson from "@/../package.json";
 
 export const routing = defineRouting({
-  locales: ['vi', 'en'],
-  defaultLocale: 'vi',
-  localePrefix: 'always',
+  locales: packageJson.internationalization.locales,
+  defaultLocale: packageJson.internationalization.defaultLocale,
+  localePrefix: "always",
   localeDetection: false,
 });
 
