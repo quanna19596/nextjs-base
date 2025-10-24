@@ -6,7 +6,7 @@ const generatePrivateRoutes = () => {
     fs.readFileSync(path.join(process.cwd(), "package.json"), "utf8")
   );
 
-  const { locales } = packageJson.internationalization;
+  const { locales } = packageJson.config.internationalization;
 
   const baseDir = path.join(process.cwd(), "src/app");
   const targetDir = path.join(
@@ -23,7 +23,6 @@ const generatePrivateRoutes = () => {
       if (entry.isDirectory()) {
         walk(rawPath);
       } else if (entry.isFile() && entry.name === "page.tsx") {
-        console.log(rawPath);
         const pathWithoutBaseDir = rawPath
           .replace(baseDir, "")
           .replace("/[locale]", "");
@@ -56,7 +55,7 @@ const generatePrivateRoutes = () => {
     JSON.stringify(beautifiedPrivatePagePaths, null, 2)
   );
 
-  console.log("✅ Generated private routes");
+  console.log("✅ Router Protected!");
 };
 
 generatePrivateRoutes();

@@ -6,7 +6,7 @@ import {
   TResponseSuccess,
   TResponseFailed,
   TRequest,
-} from "@/services/sample/types";
+} from "@/services/types";
 
 export type TRefreshTokenPaths = TRequestPaths<{}>;
 

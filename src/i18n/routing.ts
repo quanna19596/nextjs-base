@@ -4,8 +4,8 @@ import { defineRouting } from "next-intl/routing";
 import packageJson from "@/../package.json";
 
 export const routing = defineRouting({
-  locales: packageJson.internationalization.locales,
-  defaultLocale: packageJson.internationalization.defaultLocale,
+  locales: packageJson.config.internationalization.locales,
+  defaultLocale: packageJson.config.internationalization.defaultLocale,
   localePrefix: "always",
   localeDetection: false,
 });

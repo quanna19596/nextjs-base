@@ -12,7 +12,7 @@ import {
   getBearerToken,
   updateAuthSession,
 } from "@/utils/auth";
-import { TRequestQueueItem } from "./types";
+import { TRequestQueueItem } from "@/services/types";
 import { signOut } from "next-auth/react";
 import http from "@/services/http";
 import refreshToken, {

@@ -24,11 +24,7 @@ export type TRequest<TPaths = {}, TQueries = {}, TBody = {}> = {
   body?: TBody;
 };
 
-export type TRequestQueueItem = ((
+export type TRequestQueueItem = (
   error: Error | null,
   accessToken?: string
-) => void);
-// export interface ICustomAxiosRequestConfig
-//   extends Omit<AxiosRequestConfig, "headers"> {
-//   headers: any;
-// }
+) => void;

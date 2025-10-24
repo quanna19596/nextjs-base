@@ -3,19 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "internationalization": {
-    "locales": [
-      "vi",
-      "en"
-    ],
-    "defaultLocale": "vi"
-  },
   "scripts": {
-    "dev": "yarn generate-private-routes && next dev -p 3001",
+    "dev": "next dev -p 3001",
+    "predev": "yarn router-protection",
     "build": "next build",
+    "prebuild": "yarn router-protection",
     "start": "next start",
     "lint": "next lint",
-    "generate-private-routes": "node generator/routes/scripts.js"
+    "router-protection": "node generator/routes/scripts.js"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.74.4",
@@ -37,5 +32,14 @@
     "eslint-config-next": "15.3.1",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "config": {
+    "internationalization": {
+      "locales": [
+        "vi",
+        "en"
+      ],
+      "defaultLocale": "vi"
+    }
   }
 }
