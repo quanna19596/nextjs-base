@@ -11,7 +11,7 @@
     "start": "next start",
     "lint": "next lint",
     "format": "npx prettier --write .",
-    "prepare": "husky install",
+    "prepare": "husky init",
     "router-protection": "node generator/routes/scripts.js"
   },
   "dependencies": {
