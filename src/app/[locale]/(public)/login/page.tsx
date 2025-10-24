@@ -1,13 +1,13 @@
 "use client";
 
-import { TOnSubmitFormEvent, TOnChangeInputEvent } from "@/common/types";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { TOnChangeInputEvent, TOnSubmitFormEvent } from "@/common/types";
 
 const Login = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const [form, setForm] = useState<{

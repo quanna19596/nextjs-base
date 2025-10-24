@@ -1,11 +1,11 @@
 import SampleService from "@/services/sample";
 import {
+  TRequest,
+  TRequestBody,
   TRequestPaths,
   TRequestQueries,
-  TRequestBody,
-  TResponseSuccess,
   TResponseFailed,
-  TRequest,
+  TResponseSuccess,
 } from "@/services/types";
 
 export type TRefreshTokenPaths = TRequestPaths<{}>;
@@ -30,7 +30,7 @@ export type TRefreshTokenRequest = TRequest<
 >;
 
 const refreshToken = async (
-  request: TRefreshTokenRequest
+  request: TRefreshTokenRequest,
 ): Promise<TRefreshTokenResponseSuccess> => {
   const { body } = request;
   const service = await SampleService();

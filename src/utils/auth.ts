@@ -1,6 +1,5 @@
-import { getServerSession, Session } from "next-auth";
+import { Session, getServerSession } from "next-auth";
 import { getSession } from "next-auth/react";
-
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { TCookieStructure } from "@/common/types";
 
@@ -15,7 +14,7 @@ export const getBearerToken = (token?: string): string => {
 };
 
 export const updateAuthSession = async (
-  cookieStructure: Partial<TCookieStructure>
+  cookieStructure: Partial<TCookieStructure>,
 ): Promise<void> => {
   await fetch("/api/auth/session", {
     method: "PATCH",

@@ -1,9 +1,4 @@
-import axios, {
-  AxiosError,
-  AxiosInstance,
-  AxiosResponse,
-  InternalAxiosRequestConfig,
-} from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 
 const Interceptors = ({
   baseURL,
@@ -27,7 +22,7 @@ const Interceptors = ({
   });
 
   const requestHandler = async (
-    request: InternalAxiosRequestConfig
+    request: InternalAxiosRequestConfig,
   ): Promise<InternalAxiosRequestConfig> => {
     onRequest?.(request);
     return request;
@@ -38,18 +33,13 @@ const Interceptors = ({
     return response;
   };
 
-  const responseFailedHandler = async (
-    error: AxiosError
-  ): Promise<AxiosError> => {
+  const responseFailedHandler = async (error: AxiosError): Promise<AxiosError> => {
     onResponseFailed?.(error);
     return Promise.reject(error);
   };
 
   instance.interceptors.request.use(requestHandler);
-  instance.interceptors.response.use(
-    responseSuccessHandler,
-    responseFailedHandler
-  );
+  instance.interceptors.response.use(responseSuccessHandler, responseFailedHandler);
 
   return instance;
 };

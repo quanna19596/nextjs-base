@@ -1,6 +1,5 @@
 import { createNavigation } from "next-intl/navigation";
 import { defineRouting } from "next-intl/routing";
-
 import packageJson from "@/../package.json";
 
 export const routing = defineRouting({
@@ -10,5 +9,4 @@ export const routing = defineRouting({
   localeDetection: false,
 });
 
-export const { Link, redirect, usePathname, useRouter } =
-  createNavigation(routing);
+export const { Link, redirect, usePathname, useRouter } = createNavigation(routing);

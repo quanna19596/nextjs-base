@@ -1,25 +1,15 @@
 // import { getLocale } from "next-intl/server";
-import axios, {
-  AxiosError,
-  AxiosInstance,
-  AxiosResponse,
-  InternalAxiosRequestConfig,
-} from "axios";
-
-import Interceptors from "@/services/interceptors";
-import {
-  getAuthSession,
-  getBearerToken,
-  updateAuthSession,
-} from "@/utils/auth";
-import { TRequestQueueItem } from "@/services/types";
 import { signOut } from "next-auth/react";
+import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import { EHttpStatusCode } from "@/services/enums";
 import http from "@/services/http";
+import Interceptors from "@/services/interceptors";
+import { TRequestQueueItem } from "@/services/types";
+import { getAuthSession, getBearerToken, updateAuthSession } from "@/utils/auth";
 import refreshToken, {
   TRefreshTokenResponseFailed,
   TRefreshTokenResponseSuccess,
 } from "./auth/refresh-token";
-import { EHttpStatusCode } from "@/services/enums";
 
 let isRefreshingAccessToken: boolean = false;
 let requestQueue: TRequestQueueItem[] = [];
@@ -50,13 +40,9 @@ const refreshTokens = async (): Promise<string | undefined> => {
   return data.accessToken;
 };
 
-const onTokenRefreshed = (
-  error: Error | null,
-  newAccessToken?: string
-): void => {
-  requestQueue.map(
-    (cb: (error: Error | null, newAccessToken?: string) => void) =>
-      cb(error, newAccessToken)
+const onTokenRefreshed = (error: Error | null, newAccessToken?: string): void => {
+  requestQueue.map((cb: (error: Error | null, newAccessToken?: string) => void) =>
+    cb(error, newAccessToken),
   );
 };
 
@@ -72,24 +58,20 @@ const SampleService = async (): Promise<AxiosInstance> => {
   if (accessToken) commonHeaders.Authorization = accessToken;
 
   const service = Interceptors({
-    baseURL:
-      process.env.SAMPLE_SERVICE_BASE_URL ||
-      process.env.NEXT_PUBLIC_SAMPLE_SERVICE_BASE_URL,
+    baseURL: process.env.SAMPLE_SERVICE_BASE_URL || process.env.NEXT_PUBLIC_SAMPLE_SERVICE_BASE_URL,
     commonHeaders,
     commonParams,
   });
 
   const requestHandler = async (
-    request: InternalAxiosRequestConfig
+    request: InternalAxiosRequestConfig,
   ): Promise<InternalAxiosRequestConfig> => request;
 
   const responseSuccessHandler = (response: AxiosResponse): AxiosResponse => {
     return response;
   };
 
-  const responseFailedHandler = async (
-    error: AxiosError
-  ): Promise<void | AxiosResponse<any>> => {
+  const responseFailedHandler = async (error: AxiosError): Promise<void | AxiosResponse<any>> => {
     const { status } = error.response || {};
     const originalRequest = error.config;
     const isAccessTokenExpired = status === EHttpStatusCode.BAD_REQUEST;
@@ -117,8 +99,7 @@ const SampleService = async (): Promise<AxiosInstance> => {
           if (error) return reject(error);
 
           if (newAccessToken)
-            originalRequest.headers.Authorization =
-              getBearerToken(newAccessToken);
+            originalRequest.headers.Authorization = getBearerToken(newAccessToken);
 
           return resolve(axios(originalRequest));
         });
@@ -131,10 +112,7 @@ const SampleService = async (): Promise<AxiosInstance> => {
   };
 
   service.interceptors.request.use(requestHandler);
-  service.interceptors.response.use(
-    responseSuccessHandler,
-    responseFailedHandler
-  );
+  service.interceptors.response.use(responseSuccessHandler, responseFailedHandler);
 
   return service;
 };

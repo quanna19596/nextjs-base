@@ -7,9 +7,7 @@ const authMiddleware = withAuth({
     authorized: async ({ token, req }) => {
       const { pathname } = req.nextUrl;
       const isLoggedIn = !!token;
-      const isPrivate = privateRoutes.some((route) =>
-        new RegExp(`^${route}$`).test(pathname)
-      );
+      const isPrivate = privateRoutes.some((route) => new RegExp(`^${route}$`).test(pathname));
 
       return isLoggedIn || !isPrivate;
     },

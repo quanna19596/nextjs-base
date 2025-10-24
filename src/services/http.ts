@@ -2,7 +2,7 @@ import { isAxiosError } from "axios";
 
 const http = {
   request: async <TResponseSuccess, TResponseFailed>(
-    promise: Promise<TResponseSuccess>
+    promise: Promise<TResponseSuccess>,
   ): Promise<{
     data: TResponseSuccess | null;
     error: TResponseFailed | null | unknown;

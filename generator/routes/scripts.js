@@ -2,17 +2,12 @@ import fs from "fs";
 import path from "path";
 
 const generatePrivateRoutes = () => {
-  const packageJson = JSON.parse(
-    fs.readFileSync(path.join(process.cwd(), "package.json"), "utf8")
-  );
+  const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), "package.json"), "utf8"));
 
   const { locales } = packageJson.config.internationalization;
 
   const baseDir = path.join(process.cwd(), "src/app");
-  const targetDir = path.join(
-    process.cwd(),
-    "generator/routes/private-routes.json"
-  );
+  const targetDir = path.join(process.cwd(), "generator/routes/private-routes.json");
 
   let pagePaths = [];
 
@@ -23,12 +18,8 @@ const generatePrivateRoutes = () => {
       if (entry.isDirectory()) {
         walk(rawPath);
       } else if (entry.isFile() && entry.name === "page.tsx") {
-        const pathWithoutBaseDir = rawPath
-          .replace(baseDir, "")
-          .replace("/[locale]", "");
-        const localePaths = locales.map(
-          (locale) => `/${locale}${pathWithoutBaseDir}`
-        );
+        const pathWithoutBaseDir = rawPath.replace(baseDir, "").replace("/[locale]", "");
+        const localePaths = locales.map((locale) => `/${locale}${pathWithoutBaseDir}`);
         pagePaths = [...pagePaths, ...localePaths];
       }
     }
@@ -36,9 +27,7 @@ const generatePrivateRoutes = () => {
 
   walk(baseDir);
 
-  const privatePagePaths = pagePaths.filter((path) =>
-    path.includes("(private)")
-  );
+  const privatePagePaths = pagePaths.filter((path) => path.includes("(private)"));
 
   const beautifiedPrivatePagePaths = privatePagePaths.map((path) => {
     const pathSegments = path.replace(/\/page\.tsx$/, "").split("/");
@@ -50,10 +39,7 @@ const generatePrivateRoutes = () => {
     return validPath;
   });
 
-  fs.writeFileSync(
-    targetDir,
-    JSON.stringify(beautifiedPrivatePagePaths, null, 2)
-  );
+  fs.writeFileSync(targetDir, JSON.stringify(beautifiedPrivatePagePaths, null, 2));
 
   console.log("✅ Router Protected!");
 };

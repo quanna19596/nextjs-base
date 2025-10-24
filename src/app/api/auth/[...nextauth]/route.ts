@@ -1,11 +1,8 @@
-import login, {
-  TLoginResponseFailed,
-  TLoginResponseSuccess,
-} from "@/services/sample/auth/login";
-import http from "@/services/http";
 import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
+import http from "@/services/http";
+import login, { TLoginResponseFailed, TLoginResponseSuccess } from "@/services/sample/auth/login";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -26,10 +23,9 @@ export const authOptions: NextAuthOptions = {
           },
         };
 
-        const { data, error } = await http.request<
-          TLoginResponseSuccess,
-          TLoginResponseFailed
-        >(login(loginRequest));
+        const { data, error } = await http.request<TLoginResponseSuccess, TLoginResponseFailed>(
+          login(loginRequest),
+        );
 
         if (!data || error) return null;
 

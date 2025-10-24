@@ -1,5 +1,4 @@
 import { create } from "zustand";
-
 import { TProduct } from "@/services/sample/products/types";
 
 type TCartStore = {
@@ -11,8 +10,7 @@ type TCartStore = {
 
 const useCartStore = create<TCartStore>((set) => ({
   cartItems: [],
-  addCartItem: (item) =>
-    set((state) => ({ cartItems: [...state.cartItems, item] })),
+  addCartItem: (item) => set((state) => ({ cartItems: [...state.cartItems, item] })),
 
   removeCartItem: (itemId) =>
     set((state) => ({
@@ -22,7 +20,7 @@ const useCartStore = create<TCartStore>((set) => ({
   updateCartItem: (itemId, item) =>
     set((state) => ({
       cartItems: state.cartItems.map((cartItem) =>
-        cartItem.id === itemId ? { ...cartItem, ...item } : cartItem
+        cartItem.id === itemId ? { ...cartItem, ...item } : cartItem,
       ),
     })),
 }));

@@ -24,7 +24,4 @@ export type TRequest<TPaths = {}, TQueries = {}, TBody = {}> = {
   body?: TBody;
 };
 
-export type TRequestQueueItem = (
-  error: Error | null,
-  accessToken?: string
-) => void;
+export type TRequestQueueItem = (error: Error | null, accessToken?: string) => void;
