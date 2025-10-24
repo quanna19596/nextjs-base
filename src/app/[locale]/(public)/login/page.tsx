@@ -7,7 +7,7 @@ import { TOnChangeInputEvent, TOnSubmitFormEvent } from "@/common/types";
 
 const Login = () => {
   const router = useRouter();
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const [form, setForm] = useState<{

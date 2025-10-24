@@ -1,7 +1,7 @@
 "use client";
 
-import useGetAllProducts from "@/services/sample/products/get-all-products/hook";
 import { useTranslations } from "next-intl";
+import useGetAllProducts from "@/services/sample/products/get-all-products/hook";
 
 const Home = () => {
   const { mutate, isPending } = useGetAllProducts();
