@@ -1,9 +1,11 @@
 "use client";
 
+import { JSX } from "react";
 import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import { TPageProps } from "./types";
 
-const DashboardPage1 = () => {
+const Page = ({}: TPageProps): JSX.Element => {
   const t = useTranslations();
 
   return (
@@ -20,4 +22,4 @@ const DashboardPage1 = () => {
   );
 };
 
-export default DashboardPage1;
+export default Page;

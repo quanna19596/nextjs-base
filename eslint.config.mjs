@@ -63,7 +63,7 @@ const eslintConfig = [
       "import/extensions": "off",
 
       // TypeScript
-      "@typescript-eslint/no-empty-object-type": "warn",
+      "@typescript-eslint/no-empty-object-type": "off",
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-empty-interface": "off",
       "@typescript-eslint/no-use-before-define": "off",

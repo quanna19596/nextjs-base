@@ -7,7 +7,7 @@ const generatePrivateRoutes = () => {
   const { locales } = packageJson.config.internationalization;
 
   const baseDir = path.join(process.cwd(), "src/app");
-  const targetDir = path.join(process.cwd(), "generator/routes/private-routes.json");
+  const targetDir = path.join(process.cwd(), "scripts/routes/private-routes.json");
 
   let pagePaths = [];
 

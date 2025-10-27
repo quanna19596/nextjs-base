@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { JSX, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TOnChangeInputEvent, TOnSubmitFormEvent } from "@/common/types";
+import { TPageProps } from "./types";
 
-const Login = () => {
+const Page = ({}: TPageProps): JSX.Element => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
@@ -23,17 +24,17 @@ const Login = () => {
     errMsg: "",
   });
 
-  const handleChange = (e: TOnChangeInputEvent) => {
+  const handleChange = (e: TOnChangeInputEvent): void => {
     setForm({
       ...form,
       values: { ...form.values, [e.target.name]: e.target.value },
     });
   };
 
-  const handleSubmit = async (e: TOnSubmitFormEvent) => {
+  const handleSubmit = async (e: TOnSubmitFormEvent): Promise<string | undefined> => {
     e.preventDefault();
     const result = await signIn("credentials", {
-      redirect: false, // tự handle redirect
+      redirect: false,
       username: form.values.username,
       password: form.values.password,
       callbackUrl,
@@ -68,4 +69,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Page;

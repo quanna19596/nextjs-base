@@ -10,5 +10,22 @@
       "Layout": "Xin Chào Public Layout",
       "Page": "Xin Chào Public Page"
     }
+  },
+  "Components": {
+    "Containers": {
+      "Forms": {
+        "LoginForm": {
+          "username": {
+            "label": "Tên đăng nhập",
+            "placeholder": "Nhập tên đăng nhập"
+          },
+          "password": {
+            "label": "Mật khẩu",
+            "placeholder": "Nhập mật khẩu"
+          },
+          "submitBtn": "Đăng nhập"
+        }
+      }
+    }
   }
 }

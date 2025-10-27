@@ -4,17 +4,18 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev -p 3001",
-    "predev": "yarn router-protection",
+    "dev": "concurrently \"next dev -p 3001\" \"chokidar 'src/**/*' -c 'yarn watcher' --ignore-initial\"",
+    "predev": "yarn watcher",
     "build": "next build",
-    "prebuild": "yarn router-protection",
+    "prebuild": "yarn watcher",
     "start": "next start",
     "lint": "next lint",
     "format": "npx prettier --write .",
     "prepare": "husky",
-    "router-protection": "node generator/routes/scripts.js"
+    "watcher": "node scripts/watcher.js"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@tanstack/react-query": "^5.74.4",
     "axios": "^1.9.0",
     "next": "15.3.1",
@@ -22,6 +23,7 @@
     "next-intl": "^4.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.65.0",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
@@ -31,6 +33,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "chokidar-cli": "^3.0.0",
+    "concurrently": "^9.2.1",
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
     "eslint-config-prettier": "^10.1.8",
@@ -53,7 +57,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,json,css,scss,md}": [
+    "src/**/*.{js,jsx,ts,tsx}": [
       "yarn format",
       "yarn lint"
     ]

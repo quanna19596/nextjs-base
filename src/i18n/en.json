@@ -10,5 +10,22 @@
       "Layout": "Hello Public Layout",
       "Page": "Hello Public Page"
     }
+  },
+  "Components": {
+    "Containers": {
+      "Forms": {
+        "LoginForm": {
+          "username": {
+            "label": "Username",
+            "placeholder": "Enter username"
+          },
+          "password": {
+            "label": "Password",
+            "placeholder": "Enter password"
+          },
+          "submitBtn": "Submit"
+        }
+      }
+    }
   }
 }

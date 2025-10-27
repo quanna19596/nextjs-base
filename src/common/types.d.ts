@@ -12,5 +12,13 @@ export type TCookieStructure = {
   refreshToken: string;
 };
 
+export type TFormFieldConfig = {
+  labelKey: string;
+  name: string;
+  defaultValues: string;
+  placeholder: string;
+  validationRule?: string;
+};
+
 export type TOnSubmitFormEvent = FormEvent<HTMLFormElement>;
 export type TOnChangeInputEvent = ChangeEvent<HTMLInputElement>;

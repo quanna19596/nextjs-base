@@ -1,17 +1,19 @@
 "use client";
 
+import { JSX } from "react";
 import { useTranslations } from "next-intl";
 import useGetAllProducts from "@/services/sample/products/get-all-products/hook";
+import { TPageProps } from "./types";
 
-const Home = () => {
+const Page = ({}: TPageProps): JSX.Element => {
   const { mutate, isPending } = useGetAllProducts();
   const t = useTranslations();
 
-  const handleClick = async () => {
+  const handleClick = async (): Promise<void> => {
     mutate({ queries: { pageNum: 1, pageSize: 10 } });
   };
 
-  if (isPending) return "Loading...";
+  if (isPending) return <span>Loading...</span>;
 
   return (
     <div>
@@ -21,4 +23,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Page;

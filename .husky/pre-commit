@@ -1,1 +1,8 @@
-yarn test
+yarn watcher
+if [ $? -ne 0 ]; then
+  echo "❌ Watcher validation failed. Commit aborted."
+  exit 1
+fi
+
+yarn format
+yarn lint

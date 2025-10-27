@@ -10,14 +10,14 @@ type TCartStore = {
 
 const useCartStore = create<TCartStore>((set) => ({
   cartItems: [],
-  addCartItem: (item) => set((state) => ({ cartItems: [...state.cartItems, item] })),
+  addCartItem: (item): void => set((state) => ({ cartItems: [...state.cartItems, item] })),
 
-  removeCartItem: (itemId) =>
+  removeCartItem: (itemId): void =>
     set((state) => ({
       cartItems: state.cartItems.filter((cartItem) => cartItem.id !== itemId),
     })),
 
-  updateCartItem: (itemId, item) =>
+  updateCartItem: (itemId, item): void =>
     set((state) => ({
       cartItems: state.cartItems.map((cartItem) =>
         cartItem.id === itemId ? { ...cartItem, ...item } : cartItem,

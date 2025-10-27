@@ -1,6 +1,6 @@
 import withAuth from "next-auth/middleware";
 import { NextMiddleware } from "next/server";
-import privateRoutes from "@/../generator/routes/private-routes.json";
+import privateRoutes from "@/../scripts/routes/private-routes.json";
 
 const authMiddleware = withAuth({
   callbacks: {
