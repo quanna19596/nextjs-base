@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useTranslations as useTranslationsNextIntl } from "next-intl";
 import { TTranslationKey } from "@root/generated/i18n.types";
 

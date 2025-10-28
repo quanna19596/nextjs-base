@@ -71,7 +71,7 @@ const SampleService = async (): Promise<AxiosInstance> => {
     return response;
   };
 
-  const responseFailedHandler = async (error: AxiosError): Promise<void | AxiosResponse<any>> => {
+  const responseFailedHandler = async (error: AxiosError): Promise<void | AxiosResponse> => {
     const { status } = error.response || {};
     const originalRequest = error.config;
     const isAccessTokenExpired = status === EHttpStatusCode.BAD_REQUEST;
