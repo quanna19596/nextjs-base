@@ -17,11 +17,13 @@
         "LoginForm": {
           "username": {
             "label": "Tên đăng nhập",
-            "placeholder": "Nhập tên đăng nhập"
+            "placeholder": "Nhập tên đăng nhập",
+            "errorMsg": "Vui lòng nhập tên đăng nhập"
           },
           "password": {
             "label": "Mật khẩu",
-            "placeholder": "Nhập mật khẩu"
+            "placeholder": "Nhập mật khẩu",
+            "errorMsg": "Vui lòng nhập mật khẩu"
           },
           "submitBtn": "Đăng nhập"
         }

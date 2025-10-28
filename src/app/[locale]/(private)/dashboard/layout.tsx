@@ -1,6 +1,6 @@
 import { JSX } from "react";
 import type { Metadata } from "next";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/i18n";
 import Providers from "@/providers";
 import "@/styles/globals.css";
 import { TLayoutProps } from "./types";

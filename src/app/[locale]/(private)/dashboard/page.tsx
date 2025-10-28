@@ -2,7 +2,7 @@
 
 import { JSX } from "react";
 import { signOut } from "next-auth/react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/i18n";
 import { TPageProps } from "./types";
 
 const Page = ({}: TPageProps): JSX.Element => {

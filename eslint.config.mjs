@@ -31,6 +31,7 @@ const eslintConfig = [
             "^(react/(.*)$)|^(react$)",
             "^next(.*)$",
             "<THIRD_PARTY_MODULES>",
+            "^@root/(.*)$",
             "^@types$",
             "^@/assets/(.*)$",
             "^@/common/(.*)$",

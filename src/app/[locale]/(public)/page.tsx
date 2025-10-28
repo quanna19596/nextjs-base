@@ -1,7 +1,7 @@
 "use client";
 
 import { JSX } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/i18n";
 import useGetAllProducts from "@/services/sample/products/get-all-products/hook";
 import { TPageProps } from "./types";
 
