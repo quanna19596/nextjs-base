@@ -105,7 +105,7 @@ const SampleService = async (): Promise<AxiosInstance> => {
         });
       });
 
-      return storeOriginalRequest as Promise<void | AxiosResponse<any>>;
+      return storeOriginalRequest as Promise<void | AxiosResponse>;
     }
 
     return Promise.reject(error);
