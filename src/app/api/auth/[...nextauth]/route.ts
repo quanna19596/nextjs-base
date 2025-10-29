@@ -1,6 +1,7 @@
 import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
+import packageJson from "@root/package.json";
 import http from "@/services/http";
 import login, { TLoginResponseFailed, TLoginResponseSuccess } from "@/services/sample/auth/login";
 
@@ -83,7 +84,7 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   pages: {
-    signIn: "/vi/login",
+    signIn: `/${packageJson.config.internationalization.defaultLocale}/login`,
   },
   cookies: {
     sessionToken: {

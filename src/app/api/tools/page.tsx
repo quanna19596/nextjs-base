@@ -9,7 +9,7 @@ const Page = (): JSX.Element => {
 
   return (
     <div>
-      <span>Page</span>
+      <span className="text-[#ff0000]">Welcome</span>
     </div>
   );
 };
