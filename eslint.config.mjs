@@ -32,6 +32,7 @@ const eslintConfig = [
             "^next(.*)$",
             "<THIRD_PARTY_MODULES>",
             "^@root/(.*)$",
+            "^@/app/(.*)$",
             "^@types$",
             "^@/assets/(.*)$",
             "^@/common/(.*)$",

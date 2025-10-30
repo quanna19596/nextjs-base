@@ -1,6 +1,5 @@
 import { JSX } from "react";
 import { headers } from "next/headers";
-import Link from "next/link";
 import { Calendar, Home, Search, Settings, Zap } from "lucide-react";
 import {
   Sidebar,
@@ -13,42 +12,34 @@ import {
   SidebarMenuItem,
 } from "./sidebar";
 
-// Menu items.
+const rootUrl = "/api/tools";
+
 const items = [
   {
-    title: "Home",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "Endpoint",
-    url: "endpoint",
+    title: "Services",
+    rootPoint: "services",
     icon: Zap,
   },
   {
     title: "Calendar",
-    url: "#",
+    rootPoint: "#",
     icon: Calendar,
   },
   {
     title: "Search",
-    url: "#",
+    rootPoint: "#",
     icon: Search,
   },
   {
     title: "Settings",
-    url: "#",
+    rootPoint: "#",
     icon: Settings,
   },
 ];
 
 const AppSidebar = async (): Promise<JSX.Element> => {
   const headersList = await headers();
-  const host = headersList.get("x-current-path");
-  const protocol = headersList.get("x-forwarded-proto") || "http";
-
-  const fullUrl = `${protocol}://${host}`;
-  // console.log("FULL URL", fullUrl);
+  const currentPath = headersList.get("x-current-path");
 
   return (
     <Sidebar>
@@ -59,11 +50,16 @@ const AppSidebar = async (): Promise<JSX.Element> => {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={`/api/tools/${item.url}`}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={
+                      currentPath ? currentPath?.startsWith(`${rootUrl}/${item.rootPoint}`) : false
+                    }
+                  >
+                    <a href={`${rootUrl}/${item.rootPoint}`}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </Link>
+                    </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

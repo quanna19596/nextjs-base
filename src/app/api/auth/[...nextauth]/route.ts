@@ -3,7 +3,8 @@ import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import packageJson from "@root/package.json";
 import http from "@/services/http";
-import login, { TLoginResponseFailed, TLoginResponseSuccess } from "@/services/sample/auth/login";
+import login from "@/services/sample/auth/login/api";
+import { TLoginResponseFailed, TLoginResponseSuccess } from "@/services/sample/auth/login/types";
 
 export const authOptions: NextAuthOptions = {
   providers: [

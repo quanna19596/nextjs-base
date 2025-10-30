@@ -14,9 +14,9 @@ const Layout = ({ children }: { children: React.ReactNode }): JSX.Element => {
       <body>
         <SidebarProvider>
           <AppSidebar />
-          <main className="flex-1 p-4">
+          <main className="flex flex-1 flex-col items-end justify-between p-4">
+            <div className="w-full">{children}</div>
             <SidebarTrigger />
-            {children}
           </main>
         </SidebarProvider>
       </body>

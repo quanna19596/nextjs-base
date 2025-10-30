@@ -1,10 +1,9 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
-const headersMiddleware = (request: NextRequest): void => {
-  console.log("headersMiddleware");
-  const headers = new Headers(request.headers);
-  headers.append("x-current-path", request.nextUrl.pathname);
+const headersMiddleware = (request: NextRequest): NextResponse => {
+  const response = NextResponse.next();
+  response.headers.set("x-current-path", request.nextUrl.pathname);
+  return response;
 };
 
 export default headersMiddleware;

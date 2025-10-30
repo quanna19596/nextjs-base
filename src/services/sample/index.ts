@@ -6,10 +6,11 @@ import http from "@/services/http";
 import Interceptors from "@/services/interceptors";
 import { TRequestQueueItem } from "@/services/types";
 import { getAuthSession, getBearerToken, updateAuthSession } from "@/utils/auth";
-import refreshToken, {
+import refreshToken from "./auth/refresh-token/api";
+import {
   TRefreshTokenResponseFailed,
   TRefreshTokenResponseSuccess,
-} from "./auth/refresh-token";
+} from "./auth/refresh-token/types";
 
 let isRefreshingAccessToken: boolean = false;
 let requestQueue: TRequestQueueItem[] = [];
