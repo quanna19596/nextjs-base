@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { TProduct } from "@/services/sample/products/types";
+import { TProduct } from "@/services/sample/models";
 
 type TCartStore = {
   cartItems: TProduct[];

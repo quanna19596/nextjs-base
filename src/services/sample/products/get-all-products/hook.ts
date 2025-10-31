@@ -6,7 +6,11 @@ import {
   TGetAllProductsResponseSuccess,
 } from "./types";
 
-const useGetAllProducts = (): UseMutationResult => {
+const useGetAllProducts = (): UseMutationResult<
+  TGetAllProductsResponseSuccess,
+  TGetAllProductsResponseFailed,
+  TGetAllProductsRequest
+> => {
   return useMutation<
     TGetAllProductsResponseSuccess,
     TGetAllProductsResponseFailed,

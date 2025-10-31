@@ -1,12 +1,25 @@
 export type TService = {
   name: string;
   baseUrl: string;
-  groups: TGroup[];
+  camelName: string;
+  kebabName: string;
+  snakeName: string;
+  constantName: string;
+  pascalName: string;
+  numberOfGroups: number;
+  numberOfEndpoints: number;
+  numberOfModels: number;
 };
 
 export type TGroup = {
   name: string;
-  endpoints: TEndpoint[];
 };
 
 export type TEndpoint = {};
+
+export type TASTNode = {
+  name: string;
+  type: "root" | "alias" | "primitive" | "inline";
+  optional?: boolean;
+  data: string | TASTNode[];
+};

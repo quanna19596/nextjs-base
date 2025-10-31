@@ -1,4 +1,4 @@
-import { TProduct } from "@/services/sample/products/types";
+import { TProduct } from "@/services/sample/models";
 import {
   TRequest,
   TRequestBody,
@@ -6,7 +6,7 @@ import {
   TRequestQueries,
   TResponseFailed,
   TResponseSuccess,
-} from "@/services/sample/types";
+} from "@/services/types";
 
 export type TGetAllProductsPaths = TRequestPaths<{}>;
 
