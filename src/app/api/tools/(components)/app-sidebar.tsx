@@ -1,6 +1,7 @@
 import { JSX } from "react";
 import { headers } from "next/headers";
 import { Calendar, Search, Settings, Zap } from "lucide-react";
+import { ERoute } from "@/app/api/tools/(common)/enums";
 import {
   Sidebar,
   SidebarContent,
@@ -12,12 +13,10 @@ import {
   SidebarMenuItem,
 } from "./sidebar";
 
-const rootUrl = "/api/tools";
-
 const items = [
   {
     title: "Services",
-    rootPoint: "services",
+    rootPoint: ERoute.SERVICE,
     icon: Zap,
   },
   {
@@ -45,7 +44,7 @@ const AppSidebar = async (): Promise<JSX.Element> => {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Developer Tools</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
@@ -53,10 +52,12 @@ const AppSidebar = async (): Promise<JSX.Element> => {
                   <SidebarMenuButton
                     asChild
                     isActive={
-                      currentPath ? currentPath?.startsWith(`${rootUrl}/${item.rootPoint}`) : false
+                      currentPath
+                        ? currentPath?.startsWith(`${ERoute.ROOT}${item.rootPoint}`)
+                        : false
                     }
                   >
-                    <a href={`${rootUrl}/${item.rootPoint}`}>
+                    <a href={`${ERoute.ROOT}${item.rootPoint}`}>
                       <item.icon />
                       <span>{item.title}</span>
                     </a>

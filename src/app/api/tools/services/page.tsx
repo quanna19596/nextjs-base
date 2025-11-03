@@ -1,11 +1,13 @@
 "use client";
 
 import { JSX, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, Pencil, Plus, Trash2 } from "lucide-react";
+import { Check, Pencil, Plus, TextSearch, Trash2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+import { ERoute } from "@/app/api/tools/(common)/enums";
 import {
   createService,
   deleteService,
@@ -52,6 +54,8 @@ import { TCreateServiceResponse, TUpdateServiceResponse } from "@/app/api/tools/
 import { defaultValues, formSchema } from "./data";
 
 const Page = (): JSX.Element => {
+  const router = useRouter();
+
   const [services, setServices] = useState<TService[]>([]);
   const [visibleServiceForm, setVisibleServiceForm] = useState<boolean>(false);
   const [visibleConfirmDeleteServiceAlert, setVisibleConfirmDeleteServiceAlert] =
@@ -146,7 +150,7 @@ const Page = (): JSX.Element => {
         </Button>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>New service</DialogTitle>
+            <DialogTitle>{!targetService ? "New service" : targetService.name}</DialogTitle>
             <Form {...serviceForm}>
               <form onSubmit={serviceForm.handleSubmit(onSubmitService)} className="space-y-8 pt-4">
                 <FormField
@@ -205,7 +209,6 @@ const Page = (): JSX.Element => {
               <TableCell className="text-center">{service.numberOfEndpoints}</TableCell>
               <TableCell className="flex items-center">
                 <Button
-                  className="mr-2"
                   size="icon"
                   onClick={() => {
                     setTargetService(service);
@@ -215,12 +218,23 @@ const Page = (): JSX.Element => {
                   <Trash2 />
                 </Button>
                 <Button
+                  className="ml-2"
                   size="icon"
                   onClick={() => {
                     handleGetService(service);
                   }}
                 >
                   <Pencil />
+                </Button>
+                <Button
+                  className="ml-2"
+                  size="icon"
+                  onClick={() => {
+                    handleGetService(service);
+                    router.push(`${ERoute.ROOT}${ERoute.SERVICE}/${service.name}`);
+                  }}
+                >
+                  <TextSearch />
                 </Button>
               </TableCell>
             </TableRow>
