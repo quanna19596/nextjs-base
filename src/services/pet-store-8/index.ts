@@ -4,7 +4,8 @@ import Interceptors from "@/services/interceptors";
 const PetStore8Service = async (): Promise<AxiosInstance> => {
   const service = Interceptors({
     baseURL:
-      process.env.PET_STORE_8_SERVICE_BASE_URL || process.env.NEXT_PUBLIC_PET_STORE_8_SERVICE_BASE_URL,
+      process.env.PET_STORE_8_SERVICE_BASE_URL ||
+      process.env.NEXT_PUBLIC_PET_STORE_8_SERVICE_BASE_URL,
   });
 
   const requestHandler = async (

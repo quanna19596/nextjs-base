@@ -1,6 +1,6 @@
 import { JSX } from "react";
 import { headers } from "next/headers";
-import { Calendar, Home, Search, Settings, Zap } from "lucide-react";
+import { Calendar, Search, Settings, Zap } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
