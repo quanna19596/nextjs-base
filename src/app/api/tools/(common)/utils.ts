@@ -1,7 +1,8 @@
 import fs from "fs/promises";
 import path from "path";
 import { Project, PropertySignature, SyntaxKind, TypeAliasDeclaration, TypeNode } from "ts-morph";
-import { TASTNode } from "./types";
+import { ERootDir } from "./enums";
+import { TASTNode, TResponse, TService } from "./types";
 
 export const getDirectlyEntries = async (
   rootPath: string,
@@ -269,3 +270,41 @@ export const getTypesFromFile = (filePath: string): TASTNode[] => {
 
   return result;
 };
+
+export const deleteFolder = async (folderName: string): Promise<void> => {
+  const folderPath = path.resolve(process.cwd(), folderName);
+  await fs.rm(folderPath, { recursive: true, force: true });
+};
+
+export const replaceInFile = async (
+  filePath: string,
+  replacements: { [key: string]: string },
+): Promise<void> => {
+  try {
+    let content = await fs.readFile(filePath, "utf-8");
+    for (const [oldText, newText] of Object.entries(replacements)) {
+      content = content.replaceAll(oldText, newText);
+    }
+    await fs.writeFile(filePath, content, "utf-8");
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const apiWrapper = async <T>(handler: () => Promise<T>): Promise<TResponse<T>> => {
+  try {
+    const resp = await handler();
+    return { message: "", isSuccess: true, ...resp };
+  } catch (error) {
+    return { isSuccess: false, message: "Something went wrong!", error };
+  }
+};
+
+export const generateServiceRecord = async (serviceName: string): Promise<TService> => ({
+  name: serviceName,
+  baseUrl: getBaseUrl(serviceName),
+  ...getNamingCases(serviceName),
+  numberOfGroups: (await getDirectlyEntries(`${ERootDir.SERVICES}/${serviceName}`)).length,
+  numberOfEndpoints: (await getApiFiles(`${ERootDir.SERVICES}/${serviceName}`)).length,
+  numberOfModels: getTypesFromFile(`${ERootDir.SERVICES}/${serviceName}/models.d.ts`).length,
+});

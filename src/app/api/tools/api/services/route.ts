@@ -2,37 +2,49 @@ import fs from "fs/promises";
 import path from "path";
 import { ERootDir } from "@/app/api/tools/(common)/enums";
 import {
-  getApiFiles,
+  apiWrapper,
+  generateServiceRecord,
   getBaseUrl,
   getDirectlyEntries,
   getNamingCases,
-  getTypesFromFile,
 } from "@/app/api/tools/(common)/utils";
 
 export const GET = async (): Promise<Response> => {
-  const rawServices = await getDirectlyEntries(`${ERootDir.SERVICES}`);
-  const services = await Promise.all(
-    rawServices.map(async (service) => ({
-      name: service,
-      baseUrl: getBaseUrl(service),
-      ...getNamingCases(service),
-      numberOfGroups: (await getDirectlyEntries(`${ERootDir.SERVICES}/${service}`)).length,
-      numberOfEndpoints: (await getApiFiles(`${ERootDir.SERVICES}/${service}`)).length,
-      numberOfModels: getTypesFromFile(`${ERootDir.SERVICES}/${service}/models.d.ts`).length,
-    })),
-  );
+  const resp = await apiWrapper(async () => {
+    const rawServices = await getDirectlyEntries(`${ERootDir.SERVICES}`);
+    const services = await Promise.all(
+      rawServices.map(async (service) => await generateServiceRecord(service)),
+    );
 
-  return Response.json(services);
+    return { data: services };
+  });
+
+  return Response.json(resp);
 };
 
 export const POST = async (request: Request): Promise<Response> => {
-  const body: { serviceName: string; baseUrl: string } = await request.json();
-  const namingCasesServiceName = getNamingCases(body.serviceName);
+  const resp = await apiWrapper(async () => {
+    const rawBody: { serviceName: string; baseUrl: string } = await request.json();
+    const body: { serviceName: string; baseUrl: string } = {
+      serviceName: rawBody.serviceName.trim(),
+      baseUrl: rawBody.baseUrl.trim(),
+    };
+    const namingCasesServiceName = getNamingCases(body.serviceName);
 
-  const envConstantName = `${namingCasesServiceName.constantName}_SERVICE_BASE_URL`;
-  const publicEnvConstantName = `NEXT_PUBLIC_${namingCasesServiceName.constantName}_SERVICE_BASE_URL`;
+    const rawServices = await getDirectlyEntries(`${ERootDir.SERVICES}`);
 
-  try {
+    const alreadyExist = rawServices.find(
+      (service) =>
+        service === namingCasesServiceName.kebabName || getBaseUrl(service) === body.baseUrl,
+    );
+
+    if (alreadyExist) {
+      return { message: "Service already exist", isSuccess: false };
+    }
+
+    const envConstantName = `${namingCasesServiceName.constantName}_SERVICE_BASE_URL`;
+    const publicEnvConstantName = `NEXT_PUBLIC_${namingCasesServiceName.constantName}_SERVICE_BASE_URL`;
+
     const envPath = path.resolve(process.cwd(), ".env");
     const envContent = await fs.readFile(envPath, "utf-8");
     const lines = envContent.split("\n");
@@ -53,12 +65,7 @@ export const POST = async (request: Request): Promise<Response> => {
     lines.splice(updatedClientScopeIndex + 1, 0, newClientLine);
 
     await fs.writeFile(envPath, lines.join("\n"), "utf-8");
-  } catch (error) {
-    console.error(error);
-    return Response.json({});
-  }
 
-  try {
     const serviceDirPath = path.resolve(
       process.cwd(),
       `${ERootDir.SERVICES}/${namingCasesServiceName.kebabName}`,
@@ -71,7 +78,7 @@ export const POST = async (request: Request): Promise<Response> => {
     const indexTsContent = `import { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import Interceptors from "@/services/interceptors";
 
-const ${namingCasesServiceName.pascalName}Service = async (): Promise<AxiosInstance> => {
+const Service = async (): Promise<AxiosInstance> => {
   const service = Interceptors({
     baseURL:
       process.env.${envConstantName} || process.env.${publicEnvConstantName},
@@ -97,21 +104,23 @@ const ${namingCasesServiceName.pascalName}Service = async (): Promise<AxiosInsta
   return service;
 };
 
-export default ${namingCasesServiceName.pascalName}Service;
+export default Service;
 `;
 
     await fs.writeFile(path.join(serviceDirPath, "index.ts"), indexTsContent, "utf-8");
 
-    return Response.json({
-      name: body.serviceName,
-      baseUrl: body.baseUrl,
-      ...namingCasesServiceName,
-      numberOfGroups: 0,
-      numberOfEndpoints: 0,
-      numberOfModels: 0,
-    });
-  } catch (error) {
-    console.error(error);
-    return Response.json({});
-  }
+    return {
+      data: {
+        name: body.serviceName,
+        baseUrl: body.baseUrl,
+        ...namingCasesServiceName,
+        numberOfGroups: 0,
+        numberOfEndpoints: 0,
+        numberOfModels: 0,
+      },
+      message: "Service has been created",
+    };
+  });
+
+  return Response.json(resp);
 };

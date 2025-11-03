@@ -2,17 +2,34 @@
 
 import { JSX, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, Plus } from "lucide-react";
+import { Check, Pencil, Plus, Trash2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
+import {
+  createService,
+  deleteService,
+  fetchService,
+  fetchServices,
+  updateService,
+} from "@/app/api/tools/(common)/methods";
 import { TService } from "@/app/api/tools/(common)/types";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/app/api/tools/(components)/alert-dialog";
 import { Button } from "@/app/api/tools/(components)/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/app/api/tools/(components)/dialog";
 import {
   Form,
@@ -31,48 +48,97 @@ import {
   TableHeader,
   TableRow,
 } from "@/app/api/tools/(components)/table";
-import ToolsAPI from "@/app/api/tools/api";
-import { formSchema } from "./data";
+import { TCreateServiceResponse, TUpdateServiceResponse } from "@/app/api/tools/api/services/types";
+import { defaultValues, formSchema } from "./data";
 
 const Page = (): JSX.Element => {
   const [services, setServices] = useState<TService[]>([]);
   const [visibleServiceForm, setVisibleServiceForm] = useState<boolean>(false);
+  const [visibleConfirmDeleteServiceAlert, setVisibleConfirmDeleteServiceAlert] =
+    useState<boolean>(false);
+  const [targetService, setTargetService] = useState<TService>();
 
   const serviceForm = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      serviceName: "",
-      baseUrl: "",
-    },
+    defaultValues,
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>): void => {
-    createService(values);
-  };
+  const modifyServiceRespHandler = (
+    resp: TCreateServiceResponse | TUpdateServiceResponse,
+  ): void => {
+    if (!resp.isSuccess) {
+      toast.error(resp.message);
+      return;
+    }
 
-  const fetchServices = async (): Promise<void> => {
-    const { data } = await ToolsAPI.get<TService[]>("/services");
-    setServices(data);
-  };
+    const fetchServicesDelay = setTimeout(async () => {
+      const fetchServiceResp = await fetchServices();
+      if (fetchServiceResp.isSuccess && fetchServiceResp.data) setServices(fetchServiceResp.data);
 
-  const createService = async (body: z.infer<typeof formSchema>): Promise<void> => {
-    await ToolsAPI.post<TService[]>("/services", body);
-    fetchServices();
+      clearTimeout(fetchServicesDelay);
+    }, 300);
     setVisibleServiceForm(false);
+    toast.success(resp.message);
+  };
+
+  const onSubmitService = async (values: z.infer<typeof formSchema>): Promise<void> => {
+    if (!targetService) {
+      const createServiceResp = await createService(values);
+      modifyServiceRespHandler(createServiceResp);
+      return;
+    }
+
+    const updateServiceResp = await updateService(targetService.name, values);
+    modifyServiceRespHandler(updateServiceResp);
+  };
+
+  const onSubmitDeleteService = async (service: TService): Promise<void> => {
+    const resp = await deleteService(service.name);
+
+    if (!resp.isSuccess) {
+      toast.error(resp.message);
+      return;
+    }
+
+    const fetchServicesDelay = setTimeout(async () => {
+      const fetchServiceResp = await fetchServices();
+      if (fetchServiceResp.isSuccess && fetchServiceResp.data) setServices(fetchServiceResp.data);
+
+      clearTimeout(fetchServicesDelay);
+    }, 300);
+
+    toast.success(resp.message);
+  };
+
+  const handleGetService = async (service: TService): Promise<void> => {
+    const serviceResp = await fetchService(service.name);
+    if (!serviceResp.isSuccess) {
+      toast.error(serviceResp.message);
+      return;
+    }
+
+    serviceForm.reset({ serviceName: serviceResp.data?.name, baseUrl: serviceResp.data?.baseUrl });
+    setTargetService(serviceResp.data);
+    setVisibleServiceForm(true);
   };
 
   useEffect(() => {
-    fetchServices();
+    const getAllServices = async (): Promise<void> => {
+      const resp = await fetchServices();
+      if (resp.isSuccess && resp.data) setServices(resp.data);
+    };
+    getAllServices();
   }, []);
 
   return (
     <div>
       <Dialog open={visibleServiceForm} onOpenChange={setVisibleServiceForm}>
         <Button
-          className="mb-4 cursor-pointer"
+          className="mb-4"
           onClick={() => {
             setVisibleServiceForm(true);
-            serviceForm.reset();
+            setTargetService(undefined);
+            serviceForm.reset(defaultValues);
           }}
         >
           <Plus />
@@ -82,7 +148,7 @@ const Page = (): JSX.Element => {
           <DialogHeader>
             <DialogTitle>New service</DialogTitle>
             <Form {...serviceForm}>
-              <form onSubmit={serviceForm.handleSubmit(onSubmit)} className="space-y-8 pt-4">
+              <form onSubmit={serviceForm.handleSubmit(onSubmitService)} className="space-y-8 pt-4">
                 <FormField
                   control={serviceForm.control}
                   name="serviceName"
@@ -126,6 +192,7 @@ const Page = (): JSX.Element => {
             <TableHead className="text-center">Models</TableHead>
             <TableHead className="text-center">Groups</TableHead>
             <TableHead className="text-center">Endpoints</TableHead>
+            <TableHead />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -136,10 +203,56 @@ const Page = (): JSX.Element => {
               <TableCell className="text-center">{service.numberOfModels}</TableCell>
               <TableCell className="text-center">{service.numberOfGroups}</TableCell>
               <TableCell className="text-center">{service.numberOfEndpoints}</TableCell>
+              <TableCell className="flex items-center">
+                <Button
+                  className="mr-2"
+                  size="icon"
+                  onClick={() => {
+                    setTargetService(service);
+                    setVisibleConfirmDeleteServiceAlert(true);
+                  }}
+                >
+                  <Trash2 />
+                </Button>
+                <Button
+                  size="icon"
+                  onClick={() => {
+                    handleGetService(service);
+                  }}
+                >
+                  <Pencil />
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      <AlertDialog
+        open={visibleConfirmDeleteServiceAlert}
+        onOpenChange={setVisibleConfirmDeleteServiceAlert}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your account and remove
+              your service.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (targetService) {
+                  onSubmitDeleteService(targetService);
+                }
+              }}
+            >
+              Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

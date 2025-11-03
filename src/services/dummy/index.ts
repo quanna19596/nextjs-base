@@ -47,7 +47,7 @@ const onTokenRefreshed = (error: Error | null, newAccessToken?: string): void =>
   );
 };
 
-const SampleService = async (): Promise<AxiosInstance> => {
+const Service = async (): Promise<AxiosInstance> => {
   //   const locale = await getLocale();
   const session = await getAuthSession();
 
@@ -59,7 +59,7 @@ const SampleService = async (): Promise<AxiosInstance> => {
   if (accessToken) commonHeaders.Authorization = accessToken;
 
   const service = Interceptors({
-    baseURL: process.env.SAMPLE_SERVICE_BASE_URL || process.env.NEXT_PUBLIC_SAMPLE_SERVICE_BASE_URL,
+    baseURL: process.env.DUMMY_SERVICE_BASE_URL || process.env.NEXT_PUBLIC_DUMMY_SERVICE_BASE_URL,
     commonHeaders,
     commonParams,
   });
@@ -118,4 +118,4 @@ const SampleService = async (): Promise<AxiosInstance> => {
   return service;
 };
 
-export default SampleService;
+export default Service;

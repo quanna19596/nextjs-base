@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type TService = {
   name: string;
   baseUrl: string;
@@ -22,4 +23,11 @@ export type TASTNode = {
   type: "root" | "alias" | "primitive" | "inline";
   optional?: boolean;
   data: string | TASTNode[];
+};
+
+export type TResponse<T> = {
+  data?: T;
+  isSuccess: boolean;
+  message: string;
+  error?: any;
 };

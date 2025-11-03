@@ -2,6 +2,7 @@ import { JSX } from "react";
 import "@/styles/globals.css";
 import { AppSidebar } from "./(components)/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "./(components)/sidebar";
+import { Toaster } from "./(components)/sonner";
 
 export const metadata = {
   title: "Developer Tools",
@@ -19,6 +20,7 @@ const Layout = ({ children }: { children: React.ReactNode }): JSX.Element => {
             <SidebarTrigger />
           </main>
         </SidebarProvider>
+        <Toaster />
       </body>
     </html>
   );

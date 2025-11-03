@@ -1,10 +1,10 @@
 import { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import Interceptors from "@/services/interceptors";
 
-const Service = async (): Promise<AxiosInstance> => {
+const PetStore6Service = async (): Promise<AxiosInstance> => {
   const service = Interceptors({
     baseURL:
-      process.env.PET_STORE_SERVICE_BASE_URL || process.env.NEXT_PUBLIC_PET_STORE_SERVICE_BASE_URL,
+      process.env.PET_STORE_15_SERVICE_BASE_URL || process.env.NEXT_PUBLIC_PET_STORE_15_SERVICE_BASE_URL,
   });
 
   const requestHandler = async (
@@ -27,4 +27,4 @@ const Service = async (): Promise<AxiosInstance> => {
   return service;
 };
 
-export default Service;
+export default PetStore6Service;
