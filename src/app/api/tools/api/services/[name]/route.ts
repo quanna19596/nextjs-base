@@ -1,3 +1,4 @@
+import { execSync } from "child_process";
 import fs from "fs/promises";
 import path from "path";
 import { ERootDir } from "@/app/api/tools/(common)/enums";
@@ -5,8 +6,8 @@ import {
   apiWrapper,
   deleteFolder,
   generateServiceRecord,
-  getApiFiles,
   getBaseUrl,
+  getFiles,
   getNamingCases,
   replaceInFile,
 } from "@/app/api/tools/(common)/utils";
@@ -35,7 +36,6 @@ export const PATCH = async (
     const envPath = path.join(process.cwd(), ERootDir.ENV_FILE);
     const oldNamingCases = getNamingCases(params.name);
     const newNamingCases = getNamingCases(body.serviceName);
-
     const configChange = {
       oldServiceDir: path.join(process.cwd(), `${ERootDir.SERVICES}/${params.name}`),
       newServiceDir: path.join(process.cwd(), `${ERootDir.SERVICES}/${body.serviceName}`),
@@ -48,8 +48,7 @@ export const PATCH = async (
       oldBaseUrl: getBaseUrl(params.name),
       newBaseUrl: body.baseUrl,
     };
-
-    const apiFiles = await getApiFiles(configChange.oldServiceDir);
+    const apiFiles = await getFiles({ dir: configChange.oldServiceDir, fileNames: ["api.ts"] });
     if (apiFiles.length > 0) {
       for (const apiFile of apiFiles) {
         await replaceInFile(apiFile, {
@@ -57,22 +56,30 @@ export const PATCH = async (
         });
       }
     }
-
+    const tsFiles = await getFiles({
+      dir: path.join(process.cwd(), ERootDir.APP),
+      fileExts: ["ts", "tsx"],
+    });
+    if (tsFiles.length > 0) {
+      for (const tsFile of tsFiles) {
+        await replaceInFile(tsFile, {
+          [configChange.oldServiceImport]: configChange.newServiceImport,
+        });
+      }
+    }
     const indexPath = `${configChange.oldServiceDir}/index.ts`;
     await replaceInFile(indexPath, {
       [`process.env.${configChange.oldEnvVar}`]: `process.env.${configChange.newEnvVar}`,
       [`process.env.${configChange.oldPublicEnvVar}`]: `process.env.${configChange.newPublicEnvVar}`,
     });
-
     await replaceInFile(envPath, {
       [`${configChange.oldEnvVar}=${configChange.oldBaseUrl}`]: `${configChange.newEnvVar}=${configChange.newBaseUrl}`,
       [`${configChange.oldPublicEnvVar}=${configChange.oldBaseUrl}`]: `${configChange.newPublicEnvVar}=${configChange.newBaseUrl}`,
     });
-
     await fs.rename(configChange.oldServiceDir, configChange.newServiceDir);
-
     const serviceUpdated = generateServiceRecord(body.serviceName);
-
+    execSync("yarn format", { stdio: "inherit" });
+    execSync("yarn lint", { stdio: "inherit" });
     return { data: serviceUpdated, message: "Service has been updated" };
   });
 

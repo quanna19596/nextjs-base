@@ -41,6 +41,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/app/api/tools/(components)/form";
+import { FullLoading } from "@/app/api/tools/(components)/full-loading";
 import { Input } from "@/app/api/tools/(components)/input";
 import {
   Table,
@@ -56,6 +57,7 @@ import { defaultValues, formSchema } from "./data";
 const Page = (): JSX.Element => {
   const router = useRouter();
 
+  const [loading, setLoading] = useState<boolean>(false);
   const [services, setServices] = useState<TService[]>([]);
   const [visibleServiceForm, setVisibleServiceForm] = useState<boolean>(false);
   const [visibleConfirmDeleteServiceAlert, setVisibleConfirmDeleteServiceAlert] =
@@ -79,6 +81,7 @@ const Page = (): JSX.Element => {
       const fetchServiceResp = await fetchServices();
       if (fetchServiceResp.isSuccess && fetchServiceResp.data) setServices(fetchServiceResp.data);
 
+      setLoading(false);
       clearTimeout(fetchServicesDelay);
     }, 300);
     setVisibleServiceForm(false);
@@ -86,6 +89,7 @@ const Page = (): JSX.Element => {
   };
 
   const onSubmitService = async (values: z.infer<typeof formSchema>): Promise<void> => {
+    setLoading(true);
     if (!targetService) {
       const createServiceResp = await createService(values);
       modifyServiceRespHandler(createServiceResp);
@@ -97,6 +101,7 @@ const Page = (): JSX.Element => {
   };
 
   const onSubmitDeleteService = async (service: TService): Promise<void> => {
+    setLoading(true);
     const resp = await deleteService(service.name);
 
     if (!resp.isSuccess) {
@@ -108,6 +113,7 @@ const Page = (): JSX.Element => {
       const fetchServiceResp = await fetchServices();
       if (fetchServiceResp.isSuccess && fetchServiceResp.data) setServices(fetchServiceResp.data);
 
+      setLoading(false);
       clearTimeout(fetchServicesDelay);
     }, 300);
 
@@ -115,6 +121,7 @@ const Page = (): JSX.Element => {
   };
 
   const handleGetService = async (service: TService): Promise<void> => {
+    setLoading(true);
     const serviceResp = await fetchService(service.name);
     if (!serviceResp.isSuccess) {
       toast.error(serviceResp.message);
@@ -124,18 +131,22 @@ const Page = (): JSX.Element => {
     serviceForm.reset({ serviceName: serviceResp.data?.name, baseUrl: serviceResp.data?.baseUrl });
     setTargetService(serviceResp.data);
     setVisibleServiceForm(true);
+    setLoading(false);
   };
 
   useEffect(() => {
     const getAllServices = async (): Promise<void> => {
+      setLoading(true);
       const resp = await fetchServices();
       if (resp.isSuccess && resp.data) setServices(resp.data);
+      setLoading(false);
     };
     getAllServices();
   }, []);
 
   return (
     <div>
+      <FullLoading loading={loading} />
       <Dialog open={visibleServiceForm} onOpenChange={setVisibleServiceForm}>
         <Button
           className="mb-4"

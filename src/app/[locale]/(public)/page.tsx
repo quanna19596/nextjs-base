@@ -2,7 +2,7 @@
 
 import { JSX } from "react";
 import { useTranslations } from "@/i18n";
-import useGetAllProducts from "@/services/sample/products/get-all-products/hook";
+import useGetAllProducts from "@/services/dummy/products/get-all-products/hook";
 import { TPageProps } from "./types";
 
 const Page = ({}: TPageProps): JSX.Element => {

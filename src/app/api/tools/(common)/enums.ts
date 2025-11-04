@@ -1,4 +1,5 @@
 export enum ERootDir {
+  APP = "src/app",
   SERVICES = "src/services",
   ENV_FILE = ".env",
 }

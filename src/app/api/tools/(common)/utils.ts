@@ -75,16 +75,28 @@ export const getNamingCases = (
   };
 };
 
-export const getApiFiles = async (dir: string): Promise<string[]> => {
+export const getFiles = async ({
+  dir,
+  fileNames = [],
+  fileExts = [],
+}: {
+  dir: string;
+  fileNames?: string[];
+  fileExts?: string[];
+}): Promise<string[]> => {
   const entries = await fs.readdir(dir, { withFileTypes: true });
   let result: string[] = [];
 
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
+    const findingCondition =
+      fileNames.length > 0
+        ? fileNames.includes(entry.name)
+        : fileExts.includes(entry.name.split(".")[entry.name.split(".").length - 1]);
 
     if (entry.isDirectory()) {
-      result = result.concat(await getApiFiles(fullPath));
-    } else if (entry.isFile() && entry.name === "api.ts") {
+      result = result.concat(await getFiles({ dir: fullPath, fileNames, fileExts }));
+    } else if (entry.isFile() && findingCondition) {
       result.push(fullPath);
     }
   }
@@ -283,8 +295,10 @@ export const replaceInFile = async (
   try {
     let content = await fs.readFile(filePath, "utf-8");
     for (const [oldText, newText] of Object.entries(replacements)) {
-      content = content.replaceAll(oldText, newText);
+      const oldTextRg = new RegExp(oldText, "g");
+      content = content.replace(oldTextRg, newText);
     }
+
     await fs.writeFile(filePath, content, "utf-8");
   } catch (error) {
     console.error(error);
@@ -305,6 +319,8 @@ export const generateServiceRecord = async (serviceName: string): Promise<TServi
   baseUrl: getBaseUrl(serviceName),
   ...getNamingCases(serviceName),
   numberOfGroups: (await getDirectlyEntries(`${ERootDir.SERVICES}/${serviceName}`)).length,
-  numberOfEndpoints: (await getApiFiles(`${ERootDir.SERVICES}/${serviceName}`)).length,
+  numberOfEndpoints: (
+    await getFiles({ dir: `${ERootDir.SERVICES}/${serviceName}`, fileNames: ["api.ts"] })
+  ).length,
   numberOfModels: getTypesFromFile(`${ERootDir.SERVICES}/${serviceName}/models.d.ts`).length,
 });
