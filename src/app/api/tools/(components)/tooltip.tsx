@@ -1,13 +1,13 @@
 "use client";
 
-import { JSX } from "react";
+import { ComponentProps, JSX } from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import { cn } from "@/utils/common";
+import { cn } from "@/app/api/tools/(common)/csr-helpers";
 
 const TooltipProvider = ({
   delayDuration = 0,
   ...props
-}: React.ComponentProps<typeof TooltipPrimitive.Provider>): JSX.Element => {
+}: ComponentProps<typeof TooltipPrimitive.Provider>): JSX.Element => {
   return (
     <TooltipPrimitive.Provider
       data-slot="tooltip-provider"
@@ -17,7 +17,7 @@ const TooltipProvider = ({
   );
 };
 
-const Tooltip = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Root>): JSX.Element => {
+const Tooltip = ({ ...props }: ComponentProps<typeof TooltipPrimitive.Root>): JSX.Element => {
   return (
     <TooltipProvider>
       <TooltipPrimitive.Root data-slot="tooltip" {...props} />
@@ -27,7 +27,7 @@ const Tooltip = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Root
 
 const TooltipTrigger = ({
   ...props
-}: React.ComponentProps<typeof TooltipPrimitive.Trigger>): JSX.Element => {
+}: ComponentProps<typeof TooltipPrimitive.Trigger>): JSX.Element => {
   return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
 };
 
@@ -36,7 +36,7 @@ const TooltipContent = ({
   sideOffset = 0,
   children,
   ...props
-}: React.ComponentProps<typeof TooltipPrimitive.Content>): JSX.Element => {
+}: ComponentProps<typeof TooltipPrimitive.Content>): JSX.Element => {
   return (
     <TooltipPrimitive.Portal>
       <TooltipPrimitive.Content

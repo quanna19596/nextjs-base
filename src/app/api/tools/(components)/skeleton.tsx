@@ -1,7 +1,7 @@
-import { JSX } from "react";
-import { cn } from "@/utils/common";
+import { ComponentProps, JSX } from "react";
+import { cn } from "@/app/api/tools/(common)/csr-helpers";
 
-const Skeleton = ({ className, ...props }: React.ComponentProps<"div">): JSX.Element => {
+const Skeleton = ({ className, ...props }: ComponentProps<"div">): JSX.Element => {
   return (
     <div
       data-slot="skeleton"

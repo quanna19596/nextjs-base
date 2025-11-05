@@ -1,9 +1,9 @@
 "use client";
 
-import { JSX } from "react";
-import { cn } from "@/utils/common";
+import { ComponentProps, JSX } from "react";
+import { cn } from "@/app/api/tools/(common)/csr-helpers";
 
-const Table = ({ className, ...props }: React.ComponentProps<"table">): JSX.Element => {
+const Table = ({ className, ...props }: ComponentProps<"table">): JSX.Element => {
   return (
     <div data-slot="table-container" className="relative w-full overflow-x-auto">
       <table
@@ -15,7 +15,7 @@ const Table = ({ className, ...props }: React.ComponentProps<"table">): JSX.Elem
   );
 };
 
-const TableHeader = ({ className, ...props }: React.ComponentProps<"thead">): JSX.Element => {
+const TableHeader = ({ className, ...props }: ComponentProps<"thead">): JSX.Element => {
   return (
     <thead
       data-slot="table-header"
@@ -25,7 +25,7 @@ const TableHeader = ({ className, ...props }: React.ComponentProps<"thead">): JS
   );
 };
 
-const TableBody = ({ className, ...props }: React.ComponentProps<"tbody">): JSX.Element => {
+const TableBody = ({ className, ...props }: ComponentProps<"tbody">): JSX.Element => {
   return (
     <tbody
       data-slot="table-body"
@@ -35,7 +35,7 @@ const TableBody = ({ className, ...props }: React.ComponentProps<"tbody">): JSX.
   );
 };
 
-const TableFooter = ({ className, ...props }: React.ComponentProps<"tfoot">): JSX.Element => {
+const TableFooter = ({ className, ...props }: ComponentProps<"tfoot">): JSX.Element => {
   return (
     <tfoot
       data-slot="table-footer"
@@ -45,7 +45,7 @@ const TableFooter = ({ className, ...props }: React.ComponentProps<"tfoot">): JS
   );
 };
 
-const TableRow = ({ className, ...props }: React.ComponentProps<"tr">): JSX.Element => {
+const TableRow = ({ className, ...props }: ComponentProps<"tr">): JSX.Element => {
   return (
     <tr
       data-slot="table-row"
@@ -58,7 +58,7 @@ const TableRow = ({ className, ...props }: React.ComponentProps<"tr">): JSX.Elem
   );
 };
 
-const TableHead = ({ className, ...props }: React.ComponentProps<"th">): JSX.Element => {
+const TableHead = ({ className, ...props }: ComponentProps<"th">): JSX.Element => {
   return (
     <th
       data-slot="table-head"
@@ -71,7 +71,7 @@ const TableHead = ({ className, ...props }: React.ComponentProps<"th">): JSX.Ele
   );
 };
 
-const TableCell = ({ className, ...props }: React.ComponentProps<"td">): JSX.Element => {
+const TableCell = ({ className, ...props }: ComponentProps<"td">): JSX.Element => {
   return (
     <td
       data-slot="table-cell"
@@ -84,7 +84,7 @@ const TableCell = ({ className, ...props }: React.ComponentProps<"td">): JSX.Ele
   );
 };
 
-const TableCaption = ({ className, ...props }: React.ComponentProps<"caption">): JSX.Element => {
+const TableCaption = ({ className, ...props }: ComponentProps<"caption">): JSX.Element => {
   return (
     <caption
       data-slot="table-caption"

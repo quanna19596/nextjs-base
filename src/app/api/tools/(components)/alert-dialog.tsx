@@ -1,32 +1,32 @@
 "use client";
 
-import { JSX } from "react";
+import { ComponentProps, JSX } from "react";
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
+import { cn } from "@/app/api/tools/(common)/csr-helpers";
 import { buttonVariants } from "@/app/api/tools/(components)/button";
-import { cn } from "@/utils/common";
 
 const AlertDialog = ({
   ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Root>): JSX.Element => {
+}: ComponentProps<typeof AlertDialogPrimitive.Root>): JSX.Element => {
   return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />;
 };
 
 const AlertDialogTrigger = ({
   ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Trigger>): JSX.Element => {
+}: ComponentProps<typeof AlertDialogPrimitive.Trigger>): JSX.Element => {
   return <AlertDialogPrimitive.Trigger data-slot="alert-dialog-trigger" {...props} />;
 };
 
 const AlertDialogPortal = ({
   ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Portal>): JSX.Element => {
+}: ComponentProps<typeof AlertDialogPrimitive.Portal>): JSX.Element => {
   return <AlertDialogPrimitive.Portal data-slot="alert-dialog-portal" {...props} />;
 };
 
 const AlertDialogOverlay = ({
   className,
   ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Overlay>): JSX.Element => {
+}: ComponentProps<typeof AlertDialogPrimitive.Overlay>): JSX.Element => {
   return (
     <AlertDialogPrimitive.Overlay
       data-slot="alert-dialog-overlay"
@@ -42,7 +42,7 @@ const AlertDialogOverlay = ({
 const AlertDialogContent = ({
   className,
   ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Content>): JSX.Element => {
+}: ComponentProps<typeof AlertDialogPrimitive.Content>): JSX.Element => {
   return (
     <AlertDialogPortal>
       <AlertDialogOverlay />
@@ -58,7 +58,7 @@ const AlertDialogContent = ({
   );
 };
 
-const AlertDialogHeader = ({ className, ...props }: React.ComponentProps<"div">): JSX.Element => {
+const AlertDialogHeader = ({ className, ...props }: ComponentProps<"div">): JSX.Element => {
   return (
     <div
       data-slot="alert-dialog-header"
@@ -68,7 +68,7 @@ const AlertDialogHeader = ({ className, ...props }: React.ComponentProps<"div">)
   );
 };
 
-const AlertDialogFooter = ({ className, ...props }: React.ComponentProps<"div">): JSX.Element => {
+const AlertDialogFooter = ({ className, ...props }: ComponentProps<"div">): JSX.Element => {
   return (
     <div
       data-slot="alert-dialog-footer"
@@ -81,7 +81,7 @@ const AlertDialogFooter = ({ className, ...props }: React.ComponentProps<"div">)
 const AlertDialogTitle = ({
   className,
   ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Title>): JSX.Element => {
+}: ComponentProps<typeof AlertDialogPrimitive.Title>): JSX.Element => {
   return (
     <AlertDialogPrimitive.Title
       data-slot="alert-dialog-title"
@@ -94,7 +94,7 @@ const AlertDialogTitle = ({
 const AlertDialogDescription = ({
   className,
   ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Description>): JSX.Element => {
+}: ComponentProps<typeof AlertDialogPrimitive.Description>): JSX.Element => {
   return (
     <AlertDialogPrimitive.Description
       data-slot="alert-dialog-description"
@@ -107,7 +107,7 @@ const AlertDialogDescription = ({
 const AlertDialogAction = ({
   className,
   ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Action>): JSX.Element => {
+}: ComponentProps<typeof AlertDialogPrimitive.Action>): JSX.Element => {
   return (
     <AlertDialogPrimitive.Action
       className={cn("cursor-pointer", buttonVariants(), className)}
@@ -119,7 +119,7 @@ const AlertDialogAction = ({
 const AlertDialogCancel = ({
   className,
   ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Cancel>): JSX.Element => {
+}: ComponentProps<typeof AlertDialogPrimitive.Cancel>): JSX.Element => {
   return (
     <AlertDialogPrimitive.Cancel
       className={cn("cursor-pointer", { variant: "outline" }, className)}

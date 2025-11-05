@@ -16,7 +16,7 @@ import {
 const items = [
   {
     title: "Services",
-    rootPoint: ERoute.SERVICE,
+    rootPoint: ERoute.SERVICES,
     icon: Zap,
   },
   {

@@ -1,9 +1,9 @@
 "use client";
 
-import { JSX, useEffect, useState } from "react";
+import { ChangeEvent, JSX, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, Pencil, Plus, TextSearch, Trash2 } from "lucide-react";
+import { Check, Pencil, Plus, Search, TextSearch, Trash2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -15,7 +15,7 @@ import {
   fetchServices,
   updateService,
 } from "@/app/api/tools/(common)/methods";
-import { TService } from "@/app/api/tools/(common)/types";
+import { TResponse, TService } from "@/app/api/tools/(common)/types";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,8 +41,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/app/api/tools/(components)/form";
-import { FullLoading } from "@/app/api/tools/(components)/full-loading";
 import { Input } from "@/app/api/tools/(components)/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/app/api/tools/(components)/input-group";
 import {
   Table,
   TableBody,
@@ -51,13 +55,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/app/api/tools/(components)/table";
-import { TCreateServiceResponse, TUpdateServiceResponse } from "@/app/api/tools/api/services/types";
+import { useAppLoading } from "@/app/api/tools/(context)/app-loading";
 import { defaultValues, formSchema } from "./data";
 
 const Page = (): JSX.Element => {
   const router = useRouter();
+  const { setAppLoading } = useAppLoading();
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [originalServices, setOriginalServices] = useState<TService[]>([]);
   const [services, setServices] = useState<TService[]>([]);
   const [visibleServiceForm, setVisibleServiceForm] = useState<boolean>(false);
   const [visibleConfirmDeleteServiceAlert, setVisibleConfirmDeleteServiceAlert] =
@@ -69,27 +74,33 @@ const Page = (): JSX.Element => {
     defaultValues,
   });
 
-  const modifyServiceRespHandler = (
-    resp: TCreateServiceResponse | TUpdateServiceResponse,
-  ): void => {
+  const refreshServices = (): void => {
+    const fetchServicesDelay = setTimeout(async () => {
+      const fetchServiceResp = await fetchServices();
+      if (fetchServiceResp.isSuccess && fetchServiceResp.data) {
+        setServices(fetchServiceResp.data);
+        setOriginalServices(fetchServiceResp.data);
+      }
+
+      setAppLoading(false);
+      clearTimeout(fetchServicesDelay);
+    }, 300);
+  };
+
+  const modifyServiceRespHandler = (resp: TResponse<TService>): void => {
     if (!resp.isSuccess) {
+      setAppLoading(false);
       toast.error(resp.message);
       return;
     }
 
-    const fetchServicesDelay = setTimeout(async () => {
-      const fetchServiceResp = await fetchServices();
-      if (fetchServiceResp.isSuccess && fetchServiceResp.data) setServices(fetchServiceResp.data);
-
-      setLoading(false);
-      clearTimeout(fetchServicesDelay);
-    }, 300);
+    refreshServices();
     setVisibleServiceForm(false);
     toast.success(resp.message);
   };
 
   const onSubmitService = async (values: z.infer<typeof formSchema>): Promise<void> => {
-    setLoading(true);
+    setAppLoading(true);
     if (!targetService) {
       const createServiceResp = await createService(values);
       modifyServiceRespHandler(createServiceResp);
@@ -101,27 +112,21 @@ const Page = (): JSX.Element => {
   };
 
   const onSubmitDeleteService = async (service: TService): Promise<void> => {
-    setLoading(true);
+    setAppLoading(true);
     const resp = await deleteService(service.name);
 
     if (!resp.isSuccess) {
+      setAppLoading(false);
       toast.error(resp.message);
       return;
     }
 
-    const fetchServicesDelay = setTimeout(async () => {
-      const fetchServiceResp = await fetchServices();
-      if (fetchServiceResp.isSuccess && fetchServiceResp.data) setServices(fetchServiceResp.data);
-
-      setLoading(false);
-      clearTimeout(fetchServicesDelay);
-    }, 300);
-
+    refreshServices();
     toast.success(resp.message);
   };
 
   const handleGetService = async (service: TService): Promise<void> => {
-    setLoading(true);
+    setAppLoading(true);
     const serviceResp = await fetchService(service.name);
     if (!serviceResp.isSuccess) {
       toast.error(serviceResp.message);
@@ -131,25 +136,42 @@ const Page = (): JSX.Element => {
     serviceForm.reset({ serviceName: serviceResp.data?.name, baseUrl: serviceResp.data?.baseUrl });
     setTargetService(serviceResp.data);
     setVisibleServiceForm(true);
-    setLoading(false);
+    setAppLoading(false);
+  };
+
+  const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>): void => {
+    const { value } = e.target;
+    const trimmedValue = value.trim();
+
+    if (!trimmedValue) {
+      setServices(originalServices);
+      return;
+    }
+
+    const matchedServices = originalServices.filter(
+      (service) => service.name.includes(trimmedValue) || service.baseUrl.includes(trimmedValue),
+    );
+
+    setServices(matchedServices);
   };
 
   useEffect(() => {
     const getAllServices = async (): Promise<void> => {
-      setLoading(true);
+      setAppLoading(true);
       const resp = await fetchServices();
-      if (resp.isSuccess && resp.data) setServices(resp.data);
-      setLoading(false);
+      if (resp.isSuccess && resp.data) {
+        setServices(resp.data);
+        setOriginalServices(resp.data);
+      }
+      setAppLoading(false);
     };
     getAllServices();
   }, []);
 
   return (
     <div>
-      <FullLoading loading={loading} />
-      <Dialog open={visibleServiceForm} onOpenChange={setVisibleServiceForm}>
+      <div className="mb-4 flex items-center">
         <Button
-          className="mb-4"
           onClick={() => {
             setVisibleServiceForm(true);
             setTargetService(undefined);
@@ -159,6 +181,15 @@ const Page = (): JSX.Element => {
           <Plus />
           Add new service
         </Button>
+        <InputGroup className="ml-2">
+          <InputGroupInput placeholder="Search..." onChange={handleChangeSearch} />
+          <InputGroupAddon>
+            <Search />
+          </InputGroupAddon>
+          <InputGroupAddon align="inline-end">{services.length} results</InputGroupAddon>
+        </InputGroup>
+      </div>
+      <Dialog open={visibleServiceForm} onOpenChange={setVisibleServiceForm}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{!targetService ? "New service" : targetService.name}</DialogTitle>
@@ -241,8 +272,7 @@ const Page = (): JSX.Element => {
                   className="ml-2"
                   size="icon"
                   onClick={() => {
-                    handleGetService(service);
-                    router.push(`${ERoute.ROOT}${ERoute.SERVICE}/${service.name}`);
+                    router.push(`${ERoute.ROOT}${ERoute.SERVICES}/${service.name}`);
                   }}
                 >
                   <TextSearch />
@@ -260,8 +290,8 @@ const Page = (): JSX.Element => {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your account and remove
-              your service.
+              This action cannot be undone. This will permanently delete the service and all models,
+              groups, and endpoints associated with it.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

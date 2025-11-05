@@ -1,19 +1,14 @@
 import { JSX } from "react";
-import { Button } from "./button";
+import { useAppLoading } from "@/app/api/tools/(context)/app-loading";
 import { Dialog, DialogContent } from "./dialog";
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "./empty";
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "./empty";
 import { Spinner } from "./spinner";
 
-export const FullLoading = ({ loading }: { loading: boolean }): JSX.Element => {
+export const FullLoading = (): JSX.Element => {
+  const { appLoading } = useAppLoading();
+
   return (
-    <Dialog open={loading}>
+    <Dialog open={appLoading}>
       <DialogContent showCloseButton={false}>
         <Empty className="w-full">
           <EmptyHeader>

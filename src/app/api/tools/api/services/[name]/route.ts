@@ -7,8 +7,11 @@ import {
   deleteFolder,
   generateServiceRecord,
   getBaseUrl,
+  getFileContent,
   getFiles,
   getNamingCases,
+  isEnvValueAlreadyExist,
+  isFolderAlreadyExistInDir,
   replaceInFile,
 } from "@/app/api/tools/(common)/utils";
 
@@ -16,8 +19,9 @@ export const GET = async (
   _: Request,
   { params }: { params: { name: string } },
 ): Promise<Response> => {
+  const { name } = await params;
   const resp = await apiWrapper(async () => {
-    const targetService = await generateServiceRecord(params.name);
+    const targetService = await generateServiceRecord(name);
     return { data: targetService };
   });
   return Response.json(resp);
@@ -27,6 +31,7 @@ export const PATCH = async (
   request: Request,
   { params }: { params: { name: string } },
 ): Promise<Response> => {
+  const { name } = await params;
   const resp = await apiWrapper(async () => {
     const rawBody: { serviceName: string; baseUrl: string } = await request.json();
     const body: { serviceName: string; baseUrl: string } = {
@@ -34,10 +39,11 @@ export const PATCH = async (
       baseUrl: rawBody.baseUrl.trim(),
     };
     const envPath = path.join(process.cwd(), ERootDir.ENV_FILE);
-    const oldNamingCases = getNamingCases(params.name);
+    const oldNamingCases = getNamingCases(name);
     const newNamingCases = getNamingCases(body.serviceName);
+
     const configChange = {
-      oldServiceDir: path.join(process.cwd(), `${ERootDir.SERVICES}/${params.name}`),
+      oldServiceDir: path.join(process.cwd(), `${ERootDir.SERVICES}/${name}`),
       newServiceDir: path.join(process.cwd(), `${ERootDir.SERVICES}/${body.serviceName}`),
       oldServiceImport: `@/services/${oldNamingCases.kebabName}`,
       newServiceImport: `@/services/${newNamingCases.kebabName}`,
@@ -45,9 +51,33 @@ export const PATCH = async (
       newEnvVar: `${newNamingCases.constantName}_SERVICE_BASE_URL`,
       oldPublicEnvVar: `NEXT_PUBLIC_${oldNamingCases.constantName}_SERVICE_BASE_URL`,
       newPublicEnvVar: `NEXT_PUBLIC_${newNamingCases.constantName}_SERVICE_BASE_URL`,
-      oldBaseUrl: getBaseUrl(params.name),
+      oldBaseUrl: getBaseUrl(name),
       newBaseUrl: body.baseUrl,
     };
+
+    const isDuplicatedServiceName = await isFolderAlreadyExistInDir(
+      ERootDir.SERVICES,
+      newNamingCases.kebabName,
+    );
+
+    if (isDuplicatedServiceName && newNamingCases.kebabName !== oldNamingCases.kebabName) {
+      return { message: "Service name already exist", isSuccess: false };
+    }
+
+    const isDuplicatedBaseUrl = await isEnvValueAlreadyExist(body.baseUrl);
+
+    if (isDuplicatedBaseUrl && configChange.oldBaseUrl !== configChange.newBaseUrl) {
+      return { message: "Base URL already exist", isSuccess: false };
+    }
+
+    const isNotChangeAnything =
+      newNamingCases.kebabName === oldNamingCases.kebabName &&
+      configChange.oldBaseUrl === configChange.newBaseUrl;
+
+    if (isNotChangeAnything) {
+      return { message: "No changes detected", isSuccess: false };
+    }
+
     const apiFiles = await getFiles({ dir: configChange.oldServiceDir, fileNames: ["api.ts"] });
     if (apiFiles.length > 0) {
       for (const apiFile of apiFiles) {
@@ -91,8 +121,28 @@ export const DELETE = async (
   { params }: { params: { name: string } },
 ): Promise<Response> => {
   const resp = await apiWrapper(async () => {
-    const targetService = await generateServiceRecord(params.name);
-    await deleteFolder(`${ERootDir.SERVICES}/${params.name}`);
+    const { name } = await params;
+    const targetService = await generateServiceRecord(name);
+    const tsFiles = await getFiles({
+      dir: path.join(process.cwd(), ERootDir.APP),
+      fileExts: ["ts", "tsx"],
+    });
+
+    const tsFilesContent = await Promise.all(
+      tsFiles.map(async (file) => await getFileContent(file)),
+    );
+
+    if (tsFilesContent.join("\n").includes(`@/services/${name}`)) {
+      return {
+        message: "Please remove all usages of the service before deleting it",
+        isSuccess: false,
+      };
+    }
+    await replaceInFile(ERootDir.ENV_FILE, {
+      [`NEXT_PUBLIC_${targetService.constantName}_SERVICE_BASE_URL=${targetService.baseUrl}\n`]: "",
+      [`${targetService.constantName}_SERVICE_BASE_URL=${targetService.baseUrl}\n`]: "",
+    });
+    await deleteFolder(`${ERootDir.SERVICES}/${name}`);
 
     return { data: targetService, message: "Service has been deleted" };
   });

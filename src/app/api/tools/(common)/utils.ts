@@ -288,6 +288,39 @@ export const deleteFolder = async (folderName: string): Promise<void> => {
   await fs.rm(folderPath, { recursive: true, force: true });
 };
 
+export const isFolderAlreadyExistInDir = async (
+  dir: string,
+  folderName: string,
+): Promise<boolean> => {
+  const children = await getDirectlyEntries(dir);
+
+  const alreadyExist = !!children.find((name) => name === folderName);
+
+  return alreadyExist;
+};
+
+export const isEnvValueAlreadyExist = async (value: string): Promise<boolean> => {
+  const data = await fs.readFile(ERootDir.ENV_FILE, "utf8");
+  const lines = data.split("\n");
+
+  const values = lines
+    .filter((line) => {
+      const trimmed = line.trim();
+      return trimmed !== "" && !trimmed.startsWith("#");
+    })
+    .map((line) => {
+      const equalSignIndex = line.indexOf("=");
+      if (equalSignIndex === -1) {
+        return null;
+      }
+      const value = line.substring(equalSignIndex + 1).trim();
+      return value;
+    })
+    .filter((value) => value !== null);
+
+  return values.includes(value);
+};
+
 export const replaceInFile = async (
   filePath: string,
   replacements: { [key: string]: string },
@@ -303,6 +336,11 @@ export const replaceInFile = async (
   } catch (error) {
     console.error(error);
   }
+};
+
+export const getFileContent = async (filePath: string): Promise<string> => {
+  const content = await fs.readFile(filePath, "utf-8");
+  return content;
 };
 
 export const apiWrapper = async <T>(handler: () => Promise<T>): Promise<TResponse<T>> => {

@@ -1,13 +1,13 @@
-import { JSX } from "react";
+import { ComponentProps, JSX } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { ChevronRight, MoreHorizontal } from "lucide-react";
-import { cn } from "@/utils/common";
+import { cn } from "@/app/api/tools/(common)/csr-helpers";
 
-const Breadcrumb = ({ ...props }: React.ComponentProps<"nav">): JSX.Element => {
+const Breadcrumb = ({ ...props }: ComponentProps<"nav">): JSX.Element => {
   return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />;
 };
 
-const BreadcrumbList = ({ className, ...props }: React.ComponentProps<"ol">): JSX.Element => {
+const BreadcrumbList = ({ className, ...props }: ComponentProps<"ol">): JSX.Element => {
   return (
     <ol
       data-slot="breadcrumb-list"
@@ -20,7 +20,7 @@ const BreadcrumbList = ({ className, ...props }: React.ComponentProps<"ol">): JS
   );
 };
 
-const BreadcrumbItem = ({ className, ...props }: React.ComponentProps<"li">): JSX.Element => {
+const BreadcrumbItem = ({ className, ...props }: ComponentProps<"li">): JSX.Element => {
   return (
     <li
       data-slot="breadcrumb-item"
@@ -34,7 +34,7 @@ const BreadcrumbLink = ({
   asChild,
   className,
   ...props
-}: React.ComponentProps<"a"> & {
+}: ComponentProps<"a"> & {
   asChild?: boolean;
 }): JSX.Element => {
   const Comp = asChild ? Slot : "a";
@@ -48,7 +48,7 @@ const BreadcrumbLink = ({
   );
 };
 
-const BreadcrumbPage = ({ className, ...props }: React.ComponentProps<"span">): JSX.Element => {
+const BreadcrumbPage = ({ className, ...props }: ComponentProps<"span">): JSX.Element => {
   return (
     <span
       data-slot="breadcrumb-page"
@@ -65,7 +65,7 @@ const BreadcrumbSeparator = ({
   children,
   className,
   ...props
-}: React.ComponentProps<"li">): JSX.Element => {
+}: ComponentProps<"li">): JSX.Element => {
   return (
     <li
       data-slot="breadcrumb-separator"
@@ -79,7 +79,7 @@ const BreadcrumbSeparator = ({
   );
 };
 
-const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<"span">): JSX.Element => {
+const BreadcrumbEllipsis = ({ className, ...props }: ComponentProps<"span">): JSX.Element => {
   return (
     <span
       data-slot="breadcrumb-ellipsis"

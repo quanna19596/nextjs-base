@@ -1,8 +1,8 @@
-import { JSX } from "react";
+import { ComponentProps, JSX } from "react";
 import { type VariantProps, cva } from "class-variance-authority";
-import { cn } from "@/utils/common";
+import { cn } from "@/app/api/tools/(common)/csr-helpers";
 
-const Empty = ({ className, ...props }: React.ComponentProps<"div">): JSX.Element => {
+const Empty = ({ className, ...props }: ComponentProps<"div">): JSX.Element => {
   return (
     <div
       data-slot="empty"
@@ -15,7 +15,7 @@ const Empty = ({ className, ...props }: React.ComponentProps<"div">): JSX.Elemen
   );
 };
 
-const EmptyHeader = ({ className, ...props }: React.ComponentProps<"div">): JSX.Element => {
+const EmptyHeader = ({ className, ...props }: ComponentProps<"div">): JSX.Element => {
   return (
     <div
       data-slot="empty-header"
@@ -44,7 +44,7 @@ const EmptyMedia = ({
   className,
   variant = "default",
   ...props
-}: React.ComponentProps<"div"> & VariantProps<typeof emptyMediaVariants>): JSX.Element => {
+}: ComponentProps<"div"> & VariantProps<typeof emptyMediaVariants>): JSX.Element => {
   return (
     <div
       data-slot="empty-icon"
@@ -55,7 +55,7 @@ const EmptyMedia = ({
   );
 };
 
-const EmptyTitle = ({ className, ...props }: React.ComponentProps<"div">): JSX.Element => {
+const EmptyTitle = ({ className, ...props }: ComponentProps<"div">): JSX.Element => {
   return (
     <div
       data-slot="empty-title"
@@ -65,7 +65,7 @@ const EmptyTitle = ({ className, ...props }: React.ComponentProps<"div">): JSX.E
   );
 };
 
-const EmptyDescription = ({ className, ...props }: React.ComponentProps<"p">): JSX.Element => {
+const EmptyDescription = ({ className, ...props }: ComponentProps<"p">): JSX.Element => {
   return (
     <div
       data-slot="empty-description"
@@ -78,7 +78,7 @@ const EmptyDescription = ({ className, ...props }: React.ComponentProps<"p">): J
   );
 };
 
-const EmptyContent = ({ className, ...props }: React.ComponentProps<"div">): JSX.Element => {
+const EmptyContent = ({ className, ...props }: ComponentProps<"div">): JSX.Element => {
   return (
     <div
       data-slot="empty-content"

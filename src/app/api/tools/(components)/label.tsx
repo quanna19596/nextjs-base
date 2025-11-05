@@ -1,13 +1,13 @@
 "use client";
 
-import { JSX } from "react";
+import { ComponentProps, JSX } from "react";
 import * as LabelPrimitive from "@radix-ui/react-label";
-import { cn } from "@/utils/common";
+import { cn } from "@/app/api/tools/(common)/csr-helpers";
 
 const Label = ({
   className,
   ...props
-}: React.ComponentProps<typeof LabelPrimitive.Root>): JSX.Element => {
+}: ComponentProps<typeof LabelPrimitive.Root>): JSX.Element => {
   return (
     <LabelPrimitive.Root
       data-slot="label"

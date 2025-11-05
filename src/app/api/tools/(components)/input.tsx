@@ -1,7 +1,7 @@
-import { JSX } from "react";
-import { cn } from "@/utils/common";
+import { ComponentProps, JSX } from "react";
+import { cn } from "@/app/api/tools/(common)/csr-helpers";
 
-const Input = ({ className, type, ...props }: React.ComponentProps<"input">): JSX.Element => {
+const Input = ({ className, type, ...props }: ComponentProps<"input">): JSX.Element => {
   return (
     <input
       type={type}

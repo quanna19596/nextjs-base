@@ -6,5 +6,5 @@ export enum ERootDir {
 
 export enum ERoute {
   ROOT = "/api/tools",
-  SERVICE = "/services",
+  SERVICES = "/services",
 }

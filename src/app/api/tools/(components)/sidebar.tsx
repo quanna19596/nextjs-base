@@ -14,8 +14,8 @@ import {
 import { Slot } from "@radix-ui/react-slot";
 import { type VariantProps, cva } from "class-variance-authority";
 import { PanelLeftIcon } from "lucide-react";
-import { cn } from "@/utils/common";
-import { useIsMobile } from "@/utils/hooks/use-mobile";
+import { cn } from "@/app/api/tools/(common)/csr-helpers";
+import { useIsMobile } from "@/app/api/tools/(common)/hooks";
 import { Button } from "./button";
 import { Input } from "./input";
 import { Separator } from "./separator";

@@ -1,6 +1,6 @@
 import { ComponentProps, JSX } from "react";
 import { Loader2Icon } from "lucide-react";
-import { cn } from "@/utils/common";
+import { cn } from "@/app/api/tools/(common)/csr-helpers";
 
 const Spinner = ({ className, ...props }: ComponentProps<"svg">): JSX.Element => {
   return (

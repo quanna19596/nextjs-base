@@ -4,9 +4,10 @@ import { ERootDir } from "@/app/api/tools/(common)/enums";
 import {
   apiWrapper,
   generateServiceRecord,
-  getBaseUrl,
   getDirectlyEntries,
   getNamingCases,
+  isEnvValueAlreadyExist,
+  isFolderAlreadyExistInDir,
 } from "@/app/api/tools/(common)/utils";
 
 export const GET = async (): Promise<Response> => {
@@ -31,15 +32,19 @@ export const POST = async (request: Request): Promise<Response> => {
     };
     const namingCasesServiceName = getNamingCases(body.serviceName);
 
-    const rawServices = await getDirectlyEntries(`${ERootDir.SERVICES}`);
-
-    const alreadyExist = rawServices.find(
-      (service) =>
-        service === namingCasesServiceName.kebabName || getBaseUrl(service) === body.baseUrl,
+    const isDuplicatedServiceName = await isFolderAlreadyExistInDir(
+      ERootDir.SERVICES,
+      namingCasesServiceName.kebabName,
     );
 
-    if (alreadyExist) {
-      return { message: "Service already exist", isSuccess: false };
+    if (isDuplicatedServiceName) {
+      return { message: "Service name already exist", isSuccess: false };
+    }
+
+    const isDuplicatedBaseUrl = await isEnvValueAlreadyExist(body.baseUrl);
+
+    if (isDuplicatedBaseUrl) {
+      return { message: "Base URL already exist", isSuccess: false };
     }
 
     const envConstantName = `${namingCasesServiceName.constantName}_SERVICE_BASE_URL`;
